@@ -48,7 +48,7 @@
         .angry-cup-img { width: 140px; margin-bottom: 20px; animation: shake 0.5s infinite; }
         .back-btn-container { display: flex; align-items: center; gap: 10px; color: white; cursor: pointer; border: 2px solid white; padding: 8px 25px; border-radius: 30px; margin-top: 10px; }
 
-        /* ================== المشهد 4 (الإصلاح الاحترافي) ================== */
+        /* ================== المشهد 4 (الإصلاح الكامل) ================== */
         .scene4-container { 
             position: relative; width: 100%; height: 100%;
             display: flex; justify-content: center; align-items: center; 
@@ -66,78 +66,79 @@
             border: 3px solid #fff; z-index: 20; position: relative; 
         }
 
-        /* --- إعدادات الورد العامة --- */
+        /* --- إعدادات الورد --- */
         .flower-wrapper { 
             position: absolute; z-index: 5; cursor: pointer; 
-            transition: all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+            /* هنا كنخليو الكونتينر عادي ما مقلوبش */
         }
-        .peeking-flower { width: 100%; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.4)); }
         
-        /* *** التصحيح المهم: قلب الصورة فقط وليس الحاوية *** */
-        .flower-wrapper.right .peeking-flower { transform: scaleX(-1); }
+        .peeking-flower { width: 100%; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.4)); transition: transform 0.3s; }
 
-        /* --- إعدادات الأسهم العامة --- */
+        /* --- إعدادات الأسهم --- */
         .flower-hint-container { 
             position: absolute; display: flex; flex-direction: column; align-items: center;
             text-align: center; z-index: 30; transition: all 0.5s ease;
         }
-        .click-hint-text { color: white; font-family: 'Dancing Script', cursive; white-space: nowrap; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        .click-hint-text { color: white; font-family: 'Dancing Script', cursive; white-space: nowrap; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
         .doodle-arrow { filter: invert(1) drop-shadow(0 2px 2px rgba(0,0,0,0.5)); animation: pointDown 1s ease-in-out infinite alternate; }
 
         /* ============ تصميم الحاسوب (PC) ============ */
         @media (min-width: 769px) {
             .center-piece-container { width: 320px; }
             .flower-wrapper { top: 15%; width: 150px; }
-            .flower-wrapper.left { left: -120px; transform: rotate(-20deg); }
-            .flower-wrapper.right { right: -120px; transform: rotate(20deg); } /* الوردة مقلوبة أصلا بالخاصية العامة */
+            
+            /* اليسار */
+            .flower-wrapper.left { left: -120px; }
+            .flower-wrapper.left .peeking-flower { transform: rotate(-20deg); }
+            
+            /* اليمين */
+            .flower-wrapper.right { right: -120px; }
+            /* هنا كنقلبو غير التصويرة بوحدها باش الكتبة تبقى مقادة */
+            .flower-wrapper.right .peeking-flower { transform: scaleX(-1) rotate(20deg); } 
             
             .flower-hint-container { top: -70px; width: 120px; left: 50%; transform: translateX(-50%); }
             .click-hint-text { font-size: 1.3em; margin-bottom: 5px; }
             .doodle-arrow { width: 45px; }
-            /* فالحاسوب كنقلبو السهم ليميني باش يجي مقابل */
-            .flower-wrapper.right .doodle-arrow { transform: scaleX(-1); animation: pointDownRight 1s ease-in-out infinite alternate; }
         }
 
-        /* ============ تصميم الهاتف (Mobile) - التصحيح الاحترافي ============ */
+        /* ============ تصميم الهاتف (Mobile) ============ */
         @media (max-width: 768px) {
             .center-piece-container { 
-                width: 85%; max-width: 300px; 
-                margin-top: 80px; /* هبطنا كلشي باش نخليو التيساع للورد الفوق */
+                width: 85%; max-width: 280px; 
+                margin-top: 80px; /* هبطنا باش الورد يبان الفوق */
             }
 
-            /* الورد كيطل من الفوق فالقنات */
+            /* الورد الفوق */
             .flower-wrapper { 
-                top: -40px; /* هبطناهم باش يبانو مزيان */
-                width: 110px; /* كبرناهم شوية */
-                z-index: 25; /* فوق إطار الصورة */
+                top: -65px; /* طلعناهم مزيان باش يبانو كاملين */
+                width: 120px; /* كبرناهم باش يبانو واضحين */
             }
 
-            .flower-wrapper.left {
-                left: -20px; /* خارجة على القنت ليسري */
-                transform: rotate(-25deg); /* ميلناها مزيان */
+            /* اليسار */
+            .flower-wrapper.left { 
+                left: -15px; 
             }
-            
-            .flower-wrapper.right {
-                right: -20px; /* خارجة على القنت ليميني */
-                transform: rotate(25deg); /* ميلناها للجهة لخرى */
-                /* هنا ماكنقلبوش الكونتينر، حيت الصورة لداخل مقلوبة أصلا */
-            }
+            .flower-wrapper.left .peeking-flower { transform: rotate(-25deg); }
 
-            /* الأسهم فوق الورد */
+            /* اليمين */
+            .flower-wrapper.right { 
+                right: -15px; 
+            }
+            /* كنقلبو غير الوردة، الكتبة كتبقى مقادة */
+            .flower-wrapper.right .peeking-flower { transform: scaleX(-1) rotate(25deg); }
+
+            /* الأسهم */
             .flower-hint-container { 
                 top: -55px; width: 100px; left: 50%; transform: translateX(-50%);
             }
             .click-hint-text { font-size: 1.1em; margin-bottom: 2px; }
             .doodle-arrow { width: 35px; }
-            /* فالتليفون السهم ليميني كيبقى عادي حيت جا الفوق */
-             .flower-wrapper.right .doodle-arrow { transform: none; animation: pointDown 1s ease-in-out infinite alternate; }
         }
 
         .show-msg-btn { background: transparent; border: 2px solid white; color: white; padding: 10px 35px; font-size: 1.4em; border-radius: 50px; margin-top: 40px; cursor: pointer; z-index: 30; font-family: 'Amiri', serif; font-weight: bold; transition: 0.3s; }
         .show-msg-btn:hover { background: white; color: #720e1e; }
 
         @keyframes pointDown { from { transform: translateY(0); } to { transform: translateY(8px); } }
-        @keyframes pointDownRight { from { transform: translateY(0) scaleX(-1); } to { transform: translateY(8px) scaleX(-1); } }
 
 
         /* ================== المشهد 5 & 6 (البطاقات) ================== */
