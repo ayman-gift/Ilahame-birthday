@@ -14,7 +14,7 @@
             height: 100%; width: 100%; 
             background-color: #720e1e; 
             font-family: 'Amiri', serif; 
-            overflow: hidden; /* باش القلوب مايديروش سكرول فالصفحة الرئيسية */
+            overflow: hidden; 
         }
         * { box-sizing: border-box; }
 
@@ -28,6 +28,28 @@
             z-index: 10;
         }
         .scene.visible { opacity: 1; pointer-events: all; transform: scale(1); }
+
+        /* --- كونتينر القلوب (الشلال) - مشترك --- */
+        #hearts-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 5; /* خلف البطاقات ولكن أمام الخلفية */
+            overflow: hidden;
+        }
+        
+        .heart-particle {
+            position: absolute;
+            bottom: -50px;
+            font-size: 2rem;
+            animation: floatUp linear forwards;
+            opacity: 0;
+            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.2));
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(0.5) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            100% { transform: translateY(-120vh) scale(1.2) rotate(360deg); opacity: 0; }
+        }
 
         /* --- المشهد 1: المايل بوكس --- */
         #header-text { color: #fff; font-size: 1.8em; margin-bottom: 20px; text-shadow: 0 3px 6px rgba(0,0,0,0.3); z-index: 100; text-align: center; }
@@ -57,7 +79,6 @@
         .big-letter-img { width: 75%; max-width: 350px; border-radius: 10px; margin-bottom: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
         .yes-no-buttons { display: flex; gap: 20px; }
         .choice-btn { padding: 10px 35px; border: none; border-radius: 50px; font-family: 'Amiri', serif; font-size: 1.2em; font-weight: bold; cursor: pointer; transition: transform 0.2s; }
-        .choice-btn:active { transform: scale(0.95); }
         .btn-yes { background-color: #fff; color: #720e1e; }
         .btn-no { background-color: rgba(255,255,255,0.2); color: #fff; border: 2px solid rgba(255,255,255,0.5); }
         .angry-cup-img { width: 140px; margin-bottom: 20px; animation: shake 0.5s infinite; }
@@ -70,7 +91,6 @@
         
         .flower-wrapper { position: absolute; z-index: 5; cursor: pointer; transition: transform 0.3s; }
         .peeking-flower { width: 100%; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.4)); }
-        
         .flower-hint-container { position: absolute; display: flex; flex-direction: column; align-items: center; text-align: center; z-index: 30; }
         .click-hint-text { color: white; font-family: 'Dancing Script', cursive; white-space: nowrap; text-shadow: 0 2px 4px rgba(0,0,0,0.8); font-size: 1.2em; }
         .doodle-arrow { filter: invert(1) drop-shadow(0 2px 2px rgba(0,0,0,0.5)); animation: pointDown 1s ease-in-out infinite alternate; width: 35px; }
@@ -97,49 +117,28 @@
         .show-msg-btn:hover { background: white; color: #720e1e; }
         @keyframes pointDown { from { transform: translateY(0); } to { transform: translateY(8px); } }
 
-        /* ================== المشهد 5: الباقة + النافورة ================== */
+        /* ================== المشهد 5: الباقة ================== */
         .final-image-container {
             width: 95%; max-width: 450px; 
             background-color: #fffbf0; border-radius: 15px; 
             box-shadow: 0 20px 60px rgba(0,0,0,0.6); 
             text-align: center; border: 4px solid #fff;
-            position: relative; z-index: 20; /* فوق القلوب */
+            position: relative; z-index: 20;
             animation: popIn 0.8s forwards;
             padding: 20px;
             display: flex; flex-direction: column; align-items: center;
         }
         .final-img { width: 100%; border-radius: 10px; margin-bottom: 15px; }
-        .bday-msg-top { color: #d32f2f; font-family: 'Dancing Script', cursive; font-size: 2em; margin-bottom: 15px; text-shadow: 1px 1px 0px rgba(0,0,0,0.1); }
-        
-        /* كونتينر القلوب (الشلال) */
-        #hearts-container {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: 15; /* تحت الباقة ولكن فوق الخلفية */
-            overflow: hidden;
-        }
-        
-        .heart-particle {
-            position: absolute;
-            bottom: -50px; /* يبدا من تحت الشاشة */
-            font-size: 2rem;
-            animation: floatUp linear forwards;
-            opacity: 0;
-        }
+        .bday-msg-top { color: #d32f2f; font-family: 'Dancing Script', cursive; font-size: 2em; margin-bottom: 15px; }
 
-        @keyframes floatUp {
-            0% { transform: translateY(0) scale(0.5) rotate(0deg); opacity: 0; }
-            10% { opacity: 1; }
-            100% { transform: translateY(-120vh) scale(1.2) rotate(360deg); opacity: 0; }
-        }
-
-        /* ================== المشهد 6: الرسالة (نقية) ================== */
+        /* ================== المشهد 6: الرسالة ================== */
         .letter-card-container {
             width: 90%; max-width: 400px; 
             background-color: #fffbf0; border-radius: 15px; 
             box-shadow: 0 15px 50px rgba(0,0,0,0.5); 
             text-align: center; border: 3px solid #fff;
-            height: 80vh; /* طول ثابت */
-            position: relative; z-index: 20;
+            height: 80vh; 
+            position: relative; z-index: 20; /* فوق القلوب */
             animation: popIn 0.8s forwards;
             display: flex; flex-direction: column; overflow: hidden;
         }
@@ -160,7 +159,6 @@
             white-space: pre-line; width: 100%; padding-bottom: 20px; 
             background-image: linear-gradient(#eee 1px, transparent 1px); background-size: 100% 1.8em; 
         }
-        
         .highlight-text { color: #d32f2f; font-weight: bold; }
         .footer-heart { font-size: 1.5em; color: #d32f2f; margin-top: 10px; }
         
@@ -177,6 +175,8 @@
     </style>
 </head>
 <body>
+
+    <div id="hearts-container"></div>
 
     <div id="scene1" class="scene visible">
         <h1 id="header-text">عندك رسالة جديدة...</h1>
@@ -234,7 +234,7 @@
     </div>
 
     <div id="scene5" class="scene">
-        <div id="hearts-container"></div> <div class="final-image-container">
+        <div class="final-image-container">
             <h1 class="bday-msg-top">عيد ميلاد سعيد إلهام ❤️</h1>
             <img src="1000039396.png" class="final-img" alt="Bouquet">
             <div class="back-btn-container" style="background:#d32f2f; margin-top:5px; padding: 10px 30px; font-weight:bold;" onclick="goBackToScene4()">
@@ -289,15 +289,21 @@
         function goBackToScene2() { switchScene('scene3', 'scene2'); }
         function handleYes() { switchScene('scene2', 'scene4'); }
         
+        // الانتقال للباقة (مع تشغيل القلوب)
         function transitionToScene5() {
             switchScene('scene4', 'scene5');
-            startHeartRain(); // تشغيل نافورة القلوب
+            startHeartRain(); 
         }
+
+        // الانتقال للرسالة (مع تشغيل القلوب)
         function transitionToScene6() {
             switchScene('scene4', 'scene6');
+            startHeartRain();
         }
+
+        // الرجوع (مع إيقاف القلوب)
         function goBackToScene4() {
-            stopHeartRain(); // إيقاف القلوب عند الخروج
+            stopHeartRain(); 
             document.querySelectorAll('.scene').forEach(el => el.classList.remove('visible'));
             setTimeout(() => { document.getElementById('scene4').classList.add('visible'); }, 500);
         }
@@ -307,46 +313,47 @@
             setTimeout(() => { document.getElementById(to).classList.add('visible'); }, 500);
         }
 
-        // --- كود نافورة القلوب الجديد ---
+        // --- كود نافورة القلوب الجديد (Fountain) ---
         let heartInterval;
 
         function startHeartRain() {
             const container = document.getElementById('hearts-container');
             const symbols = ['❤️', '💖', '💕', '🌹', '🥰', '😍', '✨', '💓'];
             
-            // تأكد من عدم وجود تكرار
             if (heartInterval) clearInterval(heartInterval);
 
-            // كل 200 ميلي ثانية نزيدو قلب جديد
+            // زيادة الكثافة: قلب جديد كل 200 ميلي ثانية
             heartInterval = setInterval(() => {
-                const heart = document.createElement('div');
-                heart.classList.add('heart-particle');
-                heart.innerText = symbols[Math.floor(Math.random() * symbols.length)];
-                
-                // مكان عشوائي فالأفق
-                heart.style.left = Math.random() * 100 + '%';
-                
-                // حجم عشوائي (كبار)
-                const size = Math.random() * 20 + 30 + 'px'; // بين 30px و 50px
-                heart.style.fontSize = size;
-                
-                // مدة الطيران عشوائية
-                const duration = Math.random() * 2 + 3 + 's'; // بين 3 و 5 ثواني
-                heart.style.animationDuration = duration;
+                // إطلاق 4 قلوب دفعة واحدة لزيادة الكثافة
+                for(let i=0; i<4; i++) {
+                    const heart = document.createElement('div');
+                    heart.classList.add('heart-particle');
+                    heart.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+                    
+                    // مكان عشوائي
+                    heart.style.left = Math.random() * 100 + '%';
+                    
+                    // حجم عشوائي كبير
+                    const size = Math.random() * 20 + 30 + 'px'; // بين 30 و 50 بيكسل
+                    heart.style.fontSize = size;
+                    
+                    // سرعة متفاوتة
+                    const duration = Math.random() * 2 + 3 + 's';
+                    heart.style.animationDuration = duration;
 
-                container.appendChild(heart);
+                    container.appendChild(heart);
 
-                // مسح القلب بعد انتهاء الحركة
-                setTimeout(() => {
-                    heart.remove();
-                }, 5000);
-
-            }, 200); // سرعة التدفق
+                    // حذف القلب بعد انتهاء الحركة
+                    setTimeout(() => {
+                        heart.remove();
+                    }, 5000);
+                }
+            }, 200); 
         }
 
         function stopHeartRain() {
             if (heartInterval) clearInterval(heartInterval);
-            document.getElementById('hearts-container').innerHTML = ''; // مسح كلشي
+            document.getElementById('hearts-container').innerHTML = ''; // مسح الشاشة
         }
     </script>
 </body>
