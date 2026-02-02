@@ -15,7 +15,7 @@
             background-color: #720e1e; 
             font-family: 'Amiri', serif; 
             overflow: hidden; 
-            -webkit-tap-highlight-color: transparent; /* إزالة الوميض عند اللمس */
+            -webkit-tap-highlight-color: transparent;
         }
         * { box-sizing: border-box; }
 
@@ -23,23 +23,23 @@
         .scene { 
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
             display: flex; flex-direction: column; justify-content: center; align-items: center; 
-            transition: opacity 0.4s ease-out; /* انتقال سريع */
+            transition: opacity 0.4s ease-out;
             padding: 10px;
             opacity: 0; pointer-events: none; z-index: 10;
-            will-change: opacity; /* تحسين الأداء */
+            will-change: opacity;
         }
         .scene.visible { opacity: 1; pointer-events: all; }
 
-        /* --- المشهد 1: المايل بوكس --- */
+        /* --- المشهد 1: المايل بوكس (تعديل السرعة) --- */
         #header-text { color: #fff; font-size: 1.6em; margin-bottom: 15px; text-shadow: 0 2px 4px rgba(0,0,0,0.3); z-index: 100; text-align: center; }
         .main-container { position: relative; width: 85%; max-width: 350px; display: flex; justify-content: center; }
-        /* حذفنا الفلتر الثقيل */
         .mailbox-bg { width: 100%; height: auto; display: block; }
         
         .letter-container { 
             position: absolute; top: 58%; left: 50%; width: 65%; 
             transform: translate(-50%, -50%) scale(0.2); opacity: 0; z-index: 10; 
-            transition: all 1s cubic-bezier(0.34, 1.56, 0.64, 1); 
+            /* تعديل بسيط: سرعنا الحركة من 1s إلى 0.7s */
+            transition: all 0.7s cubic-bezier(0.34, 1.56, 0.64, 1); 
         }
         .letter-img { width: 100%; border-radius: 5px; }
         .letter-container.emerge { top: 45%; transform: translate(-50%, -50%) scale(1); opacity: 1; }
@@ -64,28 +64,24 @@
         .angry-cup-img { width: 120px; margin-bottom: 20px; animation: shake 0.5s infinite; }
         .back-btn-container { display: flex; align-items: center; gap: 8px; color: white; cursor: pointer; border: 2px solid white; padding: 6px 20px; border-radius: 30px; margin-top: 15px; }
 
-        /* --- المشهد 4 (الورد والزر - إصلاح الموبايل) --- */
+        /* --- المشهد 4 (الورد والزر) --- */
         .scene4-container { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
         .center-piece-container { position: relative; display: flex; flex-direction: column; align-items: center; transition: all 0.5s ease; }
         .sneak-peek-img { width: 100%; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.4); border: 3px solid #fff; z-index: 20; position: relative; }
         
         .flower-wrapper { position: absolute; z-index: 5; cursor: pointer; }
-        .peeking-flower { width: 100%; } /* خففنا الفلتر */
+        .peeking-flower { width: 100%; }
         .flower-hint-container { position: absolute; display: flex; flex-direction: column; align-items: center; text-align: center; z-index: 30; }
         .click-hint-text { color: white; font-family: 'Dancing Script', cursive; white-space: nowrap; text-shadow: 0 1px 2px rgba(0,0,0,0.8); font-size: 1.1em; }
         .doodle-arrow { filter: invert(1); animation: pointDown 1s ease-in-out infinite alternate; width: 30px; }
 
-        /* تعديلات خاصة للهواتف (Mobile Fix) */
+        /* Mobile Fix */
         @media (max-width: 768px) {
-            .center-piece-container { width: 70%; max-width: 260px; margin-top: 80px; } /* صغرنا العرض شوية */
-            
-            /* طلعنا الورد مزيان باش يبان كامل */
-            .flower-wrapper { top: -100px; width: 130px; } 
-            
+            .center-piece-container { width: 70%; max-width: 260px; margin-top: 80px; }
+            .flower-wrapper { top: -100px; width: 130px; }
             .flower-wrapper.left { left: -35px; transform: rotate(-25deg); } 
             .flower-wrapper.right { right: -35px; }
-            .flower-wrapper.right .peeking-flower { transform: scaleX(-1) rotate(25deg); } /* قلبنا الصورة فقط */
-            
+            .flower-wrapper.right .peeking-flower { transform: scaleX(-1) rotate(25deg); }
             .flower-hint-container { top: -55px; width: 100px; left: 50%; transform: translateX(-50%); }
         }
         
@@ -116,19 +112,15 @@
         .final-img { width: 100%; border-radius: 8px; margin-bottom: 10px; }
         .bday-msg-top { color: #d32f2f; font-family: 'Dancing Script', cursive; font-size: 1.8em; margin-bottom: 10px; }
         
-        /* كونتينر القلوب (خفيف جدا) */
+        /* كونتينر القلوب */
         #hearts-container {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: 15; overflow: hidden;
         }
         
         .heart-particle {
-            position: absolute;
-            bottom: -50px;
-            font-size: 1.8rem;
-            animation: floatUp linear forwards;
-            opacity: 0;
-            /* حيدنا text-shadow باش يخفاف */
+            position: absolute; bottom: -50px; font-size: 1.8rem;
+            animation: floatUp linear forwards; opacity: 0;
         }
 
         @keyframes floatUp {
@@ -137,7 +129,7 @@
             100% { transform: translateY(-110vh) scale(1.1) rotate(360deg); opacity: 0; }
         }
 
-        /* ================== المشهد 6: الرسالة (نقية) ================== */
+        /* ================== المشهد 6: الرسالة ================== */
         .letter-card-container {
             width: 90%; max-width: 400px; 
             background-color: #fffbf0; border-radius: 12px; 
@@ -152,7 +144,7 @@
         .card-content-scroll {
             width: 100%; height: 100%; overflow-y: auto; padding: 20px;
             display: flex; flex-direction: column; align-items: center;
-            -webkit-overflow-scrolling: touch; /* سكرول ناعم فالايفون */
+            -webkit-overflow-scrolling: touch;
         }
 
         .card-title { color: #d32f2f; font-family: 'Dancing Script', cursive; font-size: 1.8em; margin-bottom: 15px; border-bottom: 2px dashed #ffb3b3; padding-bottom: 5px; width: 100%; }
@@ -287,8 +279,9 @@
 
     <script>
         window.onload = function() {
-            setTimeout(() => { document.getElementById('myLetter').classList.add('emerge'); }, 100);
-            setTimeout(() => { document.getElementById('triggerBtn').classList.add('visible'); }, 800);
+            // تعديل التوقيت ليبدأ بسرعة البرق
+            setTimeout(() => { document.getElementById('myLetter').classList.add('emerge'); }, 50); // يبدأ بعد 50ms فقط
+            setTimeout(() => { document.getElementById('triggerBtn').classList.add('visible'); }, 700); // الزر يظهر بعد 700ms
         };
 
         function transitionToScene2() { switchScene('scene1', 'scene2'); }
@@ -315,7 +308,7 @@
             setTimeout(() => { document.getElementById(to).classList.add('visible'); }, 400);
         }
 
-        // --- نافورة القلوب (خفيفة جدا) ---
+        // --- نافورة القلوب (خفيفة) ---
         let heartInterval;
 
         function startHeartRain() {
@@ -325,27 +318,19 @@
             if (heartInterval) clearInterval(heartInterval);
 
             heartInterval = setInterval(() => {
-                // نزيدو 2 قلوب فقط ف دقة وحدة باش ما يتقالش التليفون
                 for(let i=0; i<2; i++) {
                     const heart = document.createElement('div');
                     heart.classList.add('heart-particle');
                     heart.innerText = symbols[Math.floor(Math.random() * symbols.length)];
-                    
-                    // مكان عشوائي
                     heart.style.left = Math.random() * 100 + '%';
-                    // حجم عشوائي
                     const size = Math.random() * 20 + 20 + 'px'; 
                     heart.style.fontSize = size;
-                    // سرعة عشوائية
                     const duration = Math.random() * 2 + 3 + 's';
                     heart.style.animationDuration = duration;
-
                     container.appendChild(heart);
-
-                    // المسح
                     setTimeout(() => { heart.remove(); }, 5000);
                 }
-            }, 300); // سرعة متوسطة
+            }, 300); 
         }
 
         function stopHeartRain() {
