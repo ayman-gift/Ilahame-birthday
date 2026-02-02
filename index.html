@@ -85,7 +85,7 @@
             .doodle-arrow { width: 45px; }
         }
 
-        /* Mobile Layout (Fixed) */
+        /* Mobile Layout */
         @media (max-width: 768px) {
             .center-piece-container { width: 80%; max-width: 280px; margin-top: 100px; }
             .flower-wrapper { top: -115px; width: 150px; }
@@ -105,7 +105,6 @@
 
         /* ================== المشهد 5 & 6 (إصلاح مكان الورد) ================== */
         
-        /* الكادر الخارجي الثابت (Frame) */
         .letter-card-container, .final-image-container {
             width: 95%; max-width: 450px; 
             background-color: #fffbf0; 
@@ -113,46 +112,51 @@
             box-shadow: 0 15px 50px rgba(0,0,0,0.6); 
             text-align: center; 
             border: 4px solid #fff;
-            height: 80vh; /* طول ثابت */
+            height: 80vh; 
             position: relative; z-index: 10;
             animation: popIn 1s forwards; 
             display: flex; flex-direction: column; 
-            overflow: hidden; /* باش الورد مايخرجش من الكادر */
+            overflow: hidden;
         }
 
-        .final-image-container { overflow-y: auto; align-items: center; padding: 20px; } /* المشهد 5 يبقى عادي */
+        .final-image-container { overflow-y: auto; align-items: center; padding: 20px; }
 
-        /* المحتوى الداخلي المتحرك (Scrollable Content) */
+        /* المحتوى الداخلي المتحرك */
         .card-content-scroll {
             width: 100%;
             height: 100%;
-            overflow-y: auto; /* هنا كاين السكرول */
+            overflow-y: auto; 
             padding: 20px;
             display: flex; flex-direction: column; align-items: center;
-            z-index: 10; /* فوق الخلفية ولكن الورد عندو z-index اكبر */
-            padding-bottom: 60px; /* تيساع فاللخر باش مايتغطاش الزر */
+            z-index: 10;
+            position: relative; /* ضروري باش الوردة التحتانية تشد فيه */
         }
 
         .final-img { width: 100%; border-radius: 8px; margin-bottom: 10px; }
         .bday-msg-top, .card-title { color: #d32f2f; font-family: 'Dancing Script', cursive; font-size: 1.8em; margin-bottom: 15px; }
         
-        /* --- تنسيق الورد فالجناب (ثابت فبلاصتو) --- */
+        /* --- ورد القنات --- */
         .card-corner-flower { 
             width: 60px; 
             position: absolute; 
-            z-index: 20; /* فوق كلشي */
+            z-index: 20; 
             opacity: 0.9;
-            pointer-events: none; /* باش مايحبسش الكليك */
+            pointer-events: none; 
         }
         
+        /* وردة الفوق (ثابتة مع الكادر) */
         .card-corner-flower.top-left { 
             top: -5px; left: -5px; 
             transform: rotate(-45deg); 
         }
         
+        /* وردة التحت (تتحرك مع السكرول وتكون فالقاع) */
         .card-corner-flower.bottom-right { 
-            bottom: -5px; right: -5px; /* لاصقة لتحت ليمين */
+            position: absolute; /* داخل السكرول */
+            bottom: 0px; 
+            right: 0px; 
             transform: rotate(135deg); 
+            z-index: 20;
         }
 
         .photos-row { display: flex; justify-content: center; gap: 10px; margin-bottom: 15px; flex-shrink: 0; }
@@ -169,6 +173,16 @@
         .highlight-text { color: #d32f2f; font-weight: bold; }
         .footer-heart { font-size: 1.5em; color: #d32f2f; margin-top: 10px; }
         
+        /* زر الرجوع */
+        .back-btn-card { 
+            margin-top: 10px; 
+            background: #d32f2f; color: white; border: none; 
+            padding: 8px 25px; border-radius: 20px; 
+            cursor: pointer; font-family: 'Poppins', sans-serif; font-weight: bold; 
+            display: inline-flex; align-items: center; gap: 5px; 
+            margin-bottom: 40px; /* فراغ كبير باش الوردة تجي تحتو */
+        }
+
         @keyframes popIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
         @keyframes shake { 0% { transform: rotate(0deg); } 25% { transform: rotate(5deg); } 75% { transform: rotate(-5deg); } 100% { transform: rotate(0deg); } }
         
@@ -214,7 +228,6 @@
     <div id="scene4" class="scene">
         <div class="scene4-container">
             <div class="center-piece-container">
-                
                 <div class="flower-wrapper left" onclick="transitionToScene5()">
                     <div class="flower-hint-container">
                         <span class="click-hint-text">وركي هنا</span>
@@ -222,9 +235,7 @@
                     </div>
                     <img src="1000039360.png" class="peeking-flower" alt="Flower">
                 </div>
-
                 <img src="1000039358.jpg" class="sneak-peek-img" alt="Sneak Peek">
-                
                 <div class="flower-wrapper right" onclick="transitionToScene5()">
                     <div class="flower-hint-container">
                         <span class="click-hint-text">وركي هنا</span>
@@ -232,7 +243,6 @@
                     </div>
                     <img src="1000039360.png" class="peeking-flower" alt="Flower">
                 </div>
-
                 <button class="show-msg-btn" onclick="transitionToScene6()">بين رسالة</button>
             </div>
         </div>
@@ -253,7 +263,6 @@
     <div id="scene6" class="scene">
         <div class="letter-card-container">
             <img src="1000039360.png" class="card-corner-flower top-left">
-            <img src="1000039360.png" class="card-corner-flower bottom-right">
 
             <div class="card-content-scroll">
                 <h1 class="card-title">عيد ميلاد سعيد إلهام</h1>
@@ -280,10 +289,11 @@
 كنبغيك بزاف، وعيد ميلاد سعيد يا أميرتي. 👑❤️
                 </div>
 
-                <div class="back-btn-container" style="background:#d32f2f; margin-top:10px;" onclick="goBackToScene4()">
-                    <i class="fa-solid fa-arrow-right" style="transform: rotate(180deg);"></i>
-                    <span>رجوع</span>
-                </div>
+                <button class="back-btn-card" onclick="goBackToScene4()">
+                    <i class="fa-solid fa-arrow-right" style="transform: rotate(180deg);"></i> رجوع
+                </button>
+
+                <img src="1000039360.png" class="card-corner-flower bottom-right">
             </div>
         </div>
     </div>
