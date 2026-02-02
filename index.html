@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        /* --- إعدادات الصفحة (خفيفة) --- */
+        /* --- إعدادات الصفحة --- */
         body, html { 
             margin: 0; padding: 0; 
             height: 100%; width: 100%; 
@@ -18,14 +18,14 @@
         }
         * { box-sizing: border-box; }
 
-        /* --- نظام المشاهد (سريع) --- */
+        /* --- نظام المشاهد --- */
         .scene { 
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
             display: flex; flex-direction: column; justify-content: center; align-items: center; 
-            transition: opacity 0.5s ease, transform 0.5s ease; /* سرعنا الانتقال */
+            transition: opacity 0.5s ease, transform 0.5s ease;
             padding: 15px;
             opacity: 0; pointer-events: none; transform: scale(0.98);
-            will-change: opacity, transform; /* تحسين الأداء */
+            will-change: opacity, transform;
         }
         .scene.visible { opacity: 1; pointer-events: all; transform: scale(1); }
 
@@ -33,16 +33,14 @@
         #header-text { color: #fff; font-size: 1.8em; margin-bottom: 20px; text-shadow: 0 3px 6px rgba(0,0,0,0.2); z-index: 100; text-align: center; }
         .main-container { position: relative; width: 85%; max-width: 380px; display: flex; justify-content: center; }
         .mailbox-bg { width: 100%; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3)); }
-        
         .letter-container { 
             position: absolute; top: 58%; left: 50%; width: 65%; 
             transform: translate(-50%, -50%) scale(0.2); 
             opacity: 0; z-index: 10; 
-            transition: all 1.5s cubic-bezier(0.34, 1.56, 0.64, 1); /* نقصنا الوقت ل 1.5s */
+            transition: all 1.5s cubic-bezier(0.34, 1.56, 0.64, 1); 
         }
         .letter-img { width: 100%; border-radius: 5px; }
         .letter-container.emerge { top: 45%; transform: translate(-50%, -50%) scale(1); opacity: 1; }
-
         .click-btn { 
             position: absolute; bottom: 8%; right: 8%; 
             display: flex; align-items: center; gap: 8px; color: white; 
@@ -63,7 +61,7 @@
         .angry-cup-img { width: 120px; margin-bottom: 20px; animation: shake 0.5s infinite; }
         .back-btn-container { display: flex; align-items: center; gap: 8px; color: white; cursor: pointer; border: 2px solid white; padding: 6px 20px; border-radius: 30px; margin-top: 10px; }
 
-        /* ================== المشهد 4 (الورد) ================== */
+        /* --- المشهد 4 (الورد) --- */
         .scene4-container { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
         .center-piece-container { position: relative; display: flex; flex-direction: column; align-items: center; transition: all 0.5s ease; }
         .sneak-peek-img { width: 100%; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 3px solid #fff; z-index: 20; position: relative; }
@@ -98,51 +96,34 @@
         .show-msg-btn { background: transparent; border: 2px solid white; color: white; padding: 8px 30px; font-size: 1.3em; border-radius: 50px; margin-top: 35px; cursor: pointer; z-index: 30; font-family: 'Amiri', serif; font-weight: bold; }
         @keyframes pointDown { from { transform: translateY(0); } to { transform: translateY(6px); } }
 
-        /* ================== المشهد 5 & 6 (البطاقات - نسخة خفيفة) ================== */
+        /* ================== المشهد 5 & 6 (البطاقات) ================== */
         .letter-card-container, .final-image-container {
             width: 90%; max-width: 400px; 
             background-color: #fffbf0; border-radius: 12px; 
             box-shadow: 0 10px 40px rgba(0,0,0,0.5); 
             text-align: center; border: 3px solid #fff;
-            max-height: 85vh; /* مايفوتش الشاشة */
-            overflow-y: auto; /* سكرول سامبل وخفيف */
-            padding: 15px;
-            position: relative; z-index: 10;
+            max-height: 85vh; overflow-y: auto;
+            padding: 15px; position: relative; z-index: 10;
             animation: popIn 0.8s forwards;
             display: flex; flex-direction: column; align-items: center;
         }
-
         .final-img { width: 100%; border-radius: 8px; margin-bottom: 10px; }
         .bday-msg-top, .card-title { color: #d32f2f; font-family: 'Dancing Script', cursive; font-size: 1.8em; margin-bottom: 10px; }
-        
         .photos-row { display: flex; justify-content: center; gap: 8px; margin-bottom: 15px; }
         .photo-frame { width: 75px; height: 75px; background: white; padding: 2px; border: 1px solid #ddd; transform: rotate(-3deg); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .photo-frame:nth-child(2) { transform: rotate(3deg); }
         .photo-frame img { width: 100%; height: 100%; object-fit: cover; }
-        
-        .love-letter-text { 
-            font-family: 'Amiri', serif; font-size: 1em; line-height: 1.6; color: #444; 
-            white-space: pre-line; width: 100%; padding-bottom: 10px; 
-            background-image: linear-gradient(#f0f0f0 1px, transparent 1px); background-size: 100% 1.6em; 
-        }
-        
+        .love-letter-text { font-family: 'Amiri', serif; font-size: 1em; line-height: 1.6; color: #444; white-space: pre-line; width: 100%; padding-bottom: 10px; background-image: linear-gradient(#f0f0f0 1px, transparent 1px); background-size: 100% 1.6em; }
         .highlight-text { color: #d32f2f; font-weight: bold; }
         .footer-heart { font-size: 1.4em; color: #d32f2f; margin-top: 5px; }
-        
-        /* زر الرجوع */
-        .back-btn-card { 
-            margin-top: 15px; background: #d32f2f; color: white; border: none; 
-            padding: 6px 20px; border-radius: 20px; cursor: pointer; 
-            font-family: 'Poppins', sans-serif; font-weight: bold; 
-            display: inline-flex; align-items: center; gap: 5px; 
-        }
-
+        .back-btn-card { margin-top: 15px; background: #d32f2f; color: white; border: none; padding: 6px 20px; border-radius: 20px; cursor: pointer; font-family: 'Poppins', sans-serif; font-weight: bold; display: inline-flex; align-items: center; gap: 5px; }
         @keyframes popIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
         @keyframes shake { 0% { transform: rotate(0deg); } 25% { transform: rotate(5deg); } 75% { transform: rotate(-5deg); } 100% { transform: rotate(0deg); } }
         
-        /* الانفجار الخفيف */
-        #explosion-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 100; overflow: hidden; }
-        .particle { position: absolute; top: 50%; left: 50%; width: 20px; height: 20px; opacity: 0; display: flex; justify-content: center; align-items: center; font-size: 18px; }
+        /* الانفجار المستمر (الشلال) */
+        #explosion-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50; overflow: hidden; }
+        /* تكبير حجم القلوب */
+        .particle { position: absolute; top: 50%; left: 50%; width: auto; height: auto; opacity: 0; display: flex; justify-content: center; align-items: center; font-size: 35px; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.2)); }
         @keyframes flyOut { to { opacity: 0; transform: translate(var(--dir-x), var(--dir-y)) scale(var(--scale-end)) rotate(var(--rot-end)); } }
     </style>
 </head>
@@ -218,12 +199,10 @@
     <div id="scene6" class="scene">
         <div class="letter-card-container">
             <h1 class="card-title">عيد ميلاد سعيد إلهام</h1>
-
             <div class="photos-row">
                 <div class="photo-frame"><img src="1000039376.png" alt="1"></div>
                 <div class="photo-frame"><img src="1000039358.jpg" alt="2"></div>
             </div>
-
             <div class="love-letter-text">
 في بحال هاد النهار، تزادت أجمل حاجة وقعات ليا جوج مرات فحياتي:
 <span class="highlight-text">الأولى فاش كنا صغار فالإبتدائي، والتانية فاش تعارفنا تاني.</span>
@@ -240,7 +219,6 @@
 
 كنبغيك بزاف، وعيد ميلاد سعيد يا أميرتي. 👑❤️
             </div>
-
             <button class="back-btn-card" onclick="goBackToScene4()">
                 <i class="fa-solid fa-arrow-right" style="transform: rotate(180deg);"></i> رجوع
             </button>
@@ -248,10 +226,9 @@
     </div>
 
     <script>
-        // Start Faster
         window.onload = function() {
-            setTimeout(() => { document.getElementById('myLetter').classList.add('emerge'); }, 200); // 0.2s only
-            setTimeout(() => { document.getElementById('triggerBtn').classList.add('visible'); }, 1200); // 1.2s only
+            setTimeout(() => { document.getElementById('myLetter').classList.add('emerge'); }, 200);
+            setTimeout(() => { document.getElementById('triggerBtn').classList.add('visible'); }, 1200);
         };
 
         function transitionToScene2() { switchScene('scene1', 'scene2'); }
@@ -261,12 +238,15 @@
         
         function transitionToScene5() {
             switchScene('scene4', 'scene5');
-            setTimeout(triggerExplosion, 400);
+            // بدأ الشلال المستمر
+            startContinuousExplosion();
         }
         function transitionToScene6() {
             switchScene('scene4', 'scene6');
         }
         function goBackToScene4() {
+            // حبس الشلال فاش نخرجو
+            stopContinuousExplosion();
             document.querySelectorAll('.scene').forEach(el => el.classList.remove('visible'));
             setTimeout(() => { document.getElementById('scene4').classList.add('visible'); }, 500);
         }
@@ -276,29 +256,57 @@
             setTimeout(() => { document.getElementById(to).classList.add('visible'); }, 500);
         }
 
-        function triggerExplosion() {
+        // --- نظام الشلال المستمر ---
+        let explosionInterval;
+
+        function startContinuousExplosion() {
             const container = document.getElementById('explosion-container');
-            const particlesCount = 80; // Reduced for performance
-            const elements = ['<img src="1000039360.png" style="width:100%;height:100%;object-fit:contain;">', '❤️', '💖', '🌸', '✨'];
-            for (let i = 0; i < particlesCount; i++) {
-                const particle = document.createElement('div');
-                particle.classList.add('particle');
-                const randomEl = elements[Math.floor(Math.random() * elements.length)];
-                particle.innerHTML = randomEl;
-                const angle = Math.random() * 360;
-                const distance = 150 + Math.random() * 350;
-                const dirX = Math.cos(angle * Math.PI / 180) * distance + 'px';
-                const dirY = Math.sin(angle * Math.PI / 180) * distance + 'px';
-                const scaleEnd = 0.5 + Math.random();
-                const rotEnd = (Math.random() * 360) + 'deg';
-                particle.style.setProperty('--dir-x', dirX);
-                particle.style.setProperty('--dir-y', dirY);
-                particle.style.setProperty('--scale-end', scaleEnd);
-                particle.style.setProperty('--rot-end', rotEnd);
-                particle.style.animation = `flyOut ${1 + Math.random()}s ease-out forwards`;
-                container.appendChild(particle);
-                setTimeout(() => { particle.remove(); }, 2500);
-            }
+            // إيموجيات الحب فقط
+            const elements = ['❤️', '💖', '💕', '💞', '💓', '💗', '😍', '🥰', '😘', '😻'];
+            
+            if (explosionInterval) clearInterval(explosionInterval); // تأكد من عدم وجود تكرار
+
+            // إطلاق دفعة جديدة كل 300 ميلي ثانية (سريع)
+            explosionInterval = setInterval(() => {
+                // خلق 4 قلوب دفعة واحدة
+                for(let i=0; i<4; i++) {
+                    createParticle(container, elements);
+                }
+            }, 300);
+        }
+
+        function stopContinuousExplosion() {
+            if (explosionInterval) clearInterval(explosionInterval);
+            // مسح القلوب المتبقية
+            document.getElementById('explosion-container').innerHTML = '';
+        }
+
+        function createParticle(container, elements) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            particle.innerHTML = elements[Math.floor(Math.random() * elements.length)];
+            
+            // حجم كبير ومتنوع
+            const size = 25 + Math.random() * 35 + 'px'; 
+            particle.style.fontSize = size;
+
+            const angle = Math.random() * 360;
+            const distance = 200 + Math.random() * 500;
+            const dirX = Math.cos(angle * Math.PI / 180) * distance + 'px';
+            const dirY = Math.sin(angle * Math.PI / 180) * distance + 'px';
+            const rotEnd = (Math.random() * 360) + 'deg';
+            const duration = 2 + Math.random() * 2 + 's'; // مدة الطيران
+
+            particle.style.setProperty('--dir-x', dirX);
+            particle.style.setProperty('--dir-y', dirY);
+            particle.style.setProperty('--scale-end', 0.5 + Math.random());
+            particle.style.setProperty('--rot-end', rotEnd);
+            
+            particle.style.animation = `flyOut ${duration} ease-out forwards`;
+            container.appendChild(particle);
+            
+            // حذف الجزيء بعد انتهاء الحركة للحفاظ على الأداء
+            setTimeout(() => { particle.remove(); }, parseFloat(duration) * 1000);
         }
     </script>
 </body>
