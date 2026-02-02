@@ -8,42 +8,44 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        /* --- إعدادات الصفحة (خفيفة جداً) --- */
+        /* --- 1. إعدادات الصفحة (أداء عالي) --- */
         body, html { 
             margin: 0; padding: 0; 
             height: 100%; width: 100%; 
             background-color: #720e1e; 
             font-family: 'Amiri', serif; 
             overflow: hidden; 
+            -webkit-tap-highlight-color: transparent; /* إزالة الوميض عند اللمس */
         }
         * { box-sizing: border-box; }
 
-        /* --- نظام المشاهد --- */
+        /* --- 2. نظام المشاهد --- */
         .scene { 
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
             display: flex; flex-direction: column; justify-content: center; align-items: center; 
-            transition: opacity 0.4s ease, transform 0.4s ease; /* تسريع الانتقال */
-            padding: 15px;
-            opacity: 0; pointer-events: none; transform: scale(0.98);
-            z-index: 10;
+            transition: opacity 0.4s ease-out; /* انتقال سريع */
+            padding: 10px;
+            opacity: 0; pointer-events: none; z-index: 10;
+            will-change: opacity; /* تحسين الأداء */
         }
-        .scene.visible { opacity: 1; pointer-events: all; transform: scale(1); }
+        .scene.visible { opacity: 1; pointer-events: all; }
 
         /* --- المشهد 1: المايل بوكس --- */
-        #header-text { color: #fff; font-size: 1.8em; margin-bottom: 20px; text-shadow: 0 2px 4px rgba(0,0,0,0.3); z-index: 100; text-align: center; }
+        #header-text { color: #fff; font-size: 1.6em; margin-bottom: 15px; text-shadow: 0 2px 4px rgba(0,0,0,0.3); z-index: 100; text-align: center; }
         .main-container { position: relative; width: 85%; max-width: 350px; display: flex; justify-content: center; }
-        .mailbox-bg { width: 100%; height: auto; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3)); }
+        /* حذفنا الفلتر الثقيل */
+        .mailbox-bg { width: 100%; height: auto; display: block; }
         
         .letter-container { 
             position: absolute; top: 58%; left: 50%; width: 65%; 
             transform: translate(-50%, -50%) scale(0.2); opacity: 0; z-index: 10; 
-            transition: all 1s cubic-bezier(0.34, 1.56, 0.64, 1); /* حركة سريعة */
+            transition: all 1s cubic-bezier(0.34, 1.56, 0.64, 1); 
         }
         .letter-img { width: 100%; border-radius: 5px; }
         .letter-container.emerge { top: 45%; transform: translate(-50%, -50%) scale(1); opacity: 1; }
 
         .click-btn { 
-            position: absolute; bottom: 10%; right: 5%; 
+            position: absolute; bottom: 8%; right: 5%; 
             display: flex; align-items: center; gap: 8px; color: white; 
             font-family: 'Amiri', serif; font-weight: bold; font-size: 1.1em; 
             background: rgba(0,0,0,0.3); padding: 8px 20px; border-radius: 30px; 
@@ -54,7 +56,7 @@
 
         /* --- المشاهد 2 & 3 --- */
         .question-text, .angry-text { color: #fff; font-size: 1.5em; margin-bottom: 20px; text-align: center; }
-        .big-letter-img { width: 75%; max-width: 320px; border-radius: 10px; margin-bottom: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .big-letter-img { width: 75%; max-width: 300px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
         .yes-no-buttons { display: flex; gap: 20px; }
         .choice-btn { padding: 8px 30px; border: none; border-radius: 50px; font-family: 'Amiri', serif; font-size: 1.1em; font-weight: bold; cursor: pointer; }
         .btn-yes { background-color: #fff; color: #720e1e; }
@@ -62,44 +64,49 @@
         .angry-cup-img { width: 120px; margin-bottom: 20px; animation: shake 0.5s infinite; }
         .back-btn-container { display: flex; align-items: center; gap: 8px; color: white; cursor: pointer; border: 2px solid white; padding: 6px 20px; border-radius: 30px; margin-top: 15px; }
 
-        /* --- المشهد 4 (الورد والزر) --- */
+        /* --- المشهد 4 (الورد والزر - إصلاح الموبايل) --- */
         .scene4-container { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
         .center-piece-container { position: relative; display: flex; flex-direction: column; align-items: center; transition: all 0.5s ease; }
-        .sneak-peek-img { width: 100%; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 3px solid #fff; z-index: 20; position: relative; }
+        .sneak-peek-img { width: 100%; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.4); border: 3px solid #fff; z-index: 20; position: relative; }
         
         .flower-wrapper { position: absolute; z-index: 5; cursor: pointer; }
-        .peeking-flower { width: 100%; filter: drop-shadow(0 3px 6px rgba(0,0,0,0.3)); }
+        .peeking-flower { width: 100%; } /* خففنا الفلتر */
         .flower-hint-container { position: absolute; display: flex; flex-direction: column; align-items: center; text-align: center; z-index: 30; }
-        .click-hint-text { color: white; font-family: 'Dancing Script', cursive; white-space: nowrap; text-shadow: 0 2px 4px rgba(0,0,0,0.8); font-size: 1.1em; }
-        .doodle-arrow { filter: invert(1) drop-shadow(0 2px 2px rgba(0,0,0,0.5)); animation: pointDown 1s ease-in-out infinite alternate; width: 30px; }
+        .click-hint-text { color: white; font-family: 'Dancing Script', cursive; white-space: nowrap; text-shadow: 0 1px 2px rgba(0,0,0,0.8); font-size: 1.1em; }
+        .doodle-arrow { filter: invert(1); animation: pointDown 1s ease-in-out infinite alternate; width: 30px; }
 
-        /* Mobile Layout fix */
+        /* تعديلات خاصة للهواتف (Mobile Fix) */
         @media (max-width: 768px) {
-            .center-piece-container { width: 75%; max-width: 260px; margin-top: 80px; }
-            .flower-wrapper { top: -100px; width: 130px; }
-            .flower-wrapper.left { left: -30px; transform: rotate(-25deg); } 
-            .flower-wrapper.right { right: -30px; }
-            .flower-wrapper.right .peeking-flower { transform: scaleX(-1) rotate(25deg); }
+            .center-piece-container { width: 70%; max-width: 260px; margin-top: 80px; } /* صغرنا العرض شوية */
+            
+            /* طلعنا الورد مزيان باش يبان كامل */
+            .flower-wrapper { top: -100px; width: 130px; } 
+            
+            .flower-wrapper.left { left: -35px; transform: rotate(-25deg); } 
+            .flower-wrapper.right { right: -35px; }
+            .flower-wrapper.right .peeking-flower { transform: scaleX(-1) rotate(25deg); } /* قلبنا الصورة فقط */
+            
             .flower-hint-container { top: -55px; width: 100px; left: 50%; transform: translateX(-50%); }
         }
+        
         /* PC Layout */
         @media (min-width: 769px) {
             .center-piece-container { width: 300px; }
-            .flower-wrapper { top: 10%; width: 140px; }
+            .flower-wrapper { top: 15%; width: 140px; }
             .flower-wrapper.left { left: -110px; transform: rotate(-20deg); }
             .flower-wrapper.right { right: -110px; }
             .flower-wrapper.right .peeking-flower { transform: scaleX(-1) rotate(20deg); }
             .flower-hint-container { top: -60px; }
         }
 
-        .show-msg-btn { background: transparent; border: 2px solid white; color: white; padding: 8px 30px; font-size: 1.3em; border-radius: 50px; margin-top: 35px; cursor: pointer; z-index: 30; font-family: 'Amiri', serif; font-weight: bold; }
+        .show-msg-btn { background: transparent; border: 2px solid white; color: white; padding: 8px 30px; font-size: 1.3em; border-radius: 50px; margin-top: 40px; cursor: pointer; z-index: 30; font-family: 'Amiri', serif; font-weight: bold; }
         @keyframes pointDown { from { transform: translateY(0); } to { transform: translateY(6px); } }
 
         /* ================== المشهد 5: الباقة + القلوب ================== */
         .final-image-container {
             width: 95%; max-width: 400px; 
             background-color: #fffbf0; border-radius: 12px; 
-            box-shadow: 0 15px 40px rgba(0,0,0,0.5); 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5); 
             text-align: center; border: 3px solid #fff;
             position: relative; z-index: 20;
             animation: popIn 0.6s forwards;
@@ -109,11 +116,10 @@
         .final-img { width: 100%; border-radius: 8px; margin-bottom: 10px; }
         .bday-msg-top { color: #d32f2f; font-family: 'Dancing Script', cursive; font-size: 1.8em; margin-bottom: 10px; }
         
-        /* كونتينر القلوب (الشلال) */
+        /* كونتينر القلوب (خفيف جدا) */
         #hearts-container {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: 15; /* تحت الباقة وفوق الخلفية */
-            overflow: hidden;
+            pointer-events: none; z-index: 15; overflow: hidden;
         }
         
         .heart-particle {
@@ -122,7 +128,7 @@
             font-size: 1.8rem;
             animation: floatUp linear forwards;
             opacity: 0;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            /* حيدنا text-shadow باش يخفاف */
         }
 
         @keyframes floatUp {
@@ -131,7 +137,7 @@
             100% { transform: translateY(-110vh) scale(1.1) rotate(360deg); opacity: 0; }
         }
 
-        /* ================== المشهد 6: الرسالة (نقية وبدون ورد) ================== */
+        /* ================== المشهد 6: الرسالة (نقية) ================== */
         .letter-card-container {
             width: 90%; max-width: 400px; 
             background-color: #fffbf0; border-radius: 12px; 
@@ -146,6 +152,7 @@
         .card-content-scroll {
             width: 100%; height: 100%; overflow-y: auto; padding: 20px;
             display: flex; flex-direction: column; align-items: center;
+            -webkit-overflow-scrolling: touch; /* سكرول ناعم فالايفون */
         }
 
         .card-title { color: #d32f2f; font-family: 'Dancing Script', cursive; font-size: 1.8em; margin-bottom: 15px; border-bottom: 2px dashed #ffb3b3; padding-bottom: 5px; width: 100%; }
@@ -164,13 +171,13 @@
         .footer-heart { font-size: 1.4em; color: #d32f2f; margin-top: 5px; }
         
         .back-btn-card { 
-            margin-top: 10px; background: #d32f2f; color: white; border: none; 
-            padding: 8px 25px; border-radius: 20px; cursor: pointer; 
+            margin-top: 15px; background: #d32f2f; color: white; border: none; 
+            padding: 8px 25px; border-radius: 30px; cursor: pointer; 
             font-family: 'Poppins', sans-serif; font-weight: bold; font-size: 1em;
-            display: inline-flex; align-items: center; gap: 5px; margin-bottom: 15px;
+            display: inline-flex; align-items: center; gap: 5px; margin-bottom: 20px;
         }
 
-        @keyframes popIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+        @keyframes popIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
         @keyframes shake { 0% { transform: rotate(0deg); } 25% { transform: rotate(5deg); } 75% { transform: rotate(-5deg); } 100% { transform: rotate(0deg); } }
     </style>
 </head>
@@ -181,9 +188,9 @@
     <div id="scene1" class="scene visible">
         <h1 id="header-text">عندك رسالة جديدة...</h1>
         <div class="main-container">
-            <img src="1000039319.png" class="mailbox-bg" alt="Mailbox">
+            <img src="1000039319.png" class="mailbox-bg" alt="Mailbox" loading="eager">
             <div class="letter-container" id="myLetter">
-                <img src="1000039328.png" class="letter-img" alt="Letter">
+                <img src="1000039328.png" class="letter-img" alt="Letter" loading="eager">
             </div>
         </div>
         <div class="click-btn" id="triggerBtn" onclick="transitionToScene2()">
@@ -308,7 +315,7 @@
             setTimeout(() => { document.getElementById(to).classList.add('visible'); }, 400);
         }
 
-        // --- نافورة القلوب (محسنة وخفيفة) ---
+        // --- نافورة القلوب (خفيفة جدا) ---
         let heartInterval;
 
         function startHeartRain() {
@@ -318,8 +325,8 @@
             if (heartInterval) clearInterval(heartInterval);
 
             heartInterval = setInterval(() => {
-                // نزيدو 3 قلوب ف دقة وحدة
-                for(let i=0; i<3; i++) {
+                // نزيدو 2 قلوب فقط ف دقة وحدة باش ما يتقالش التليفون
+                for(let i=0; i<2; i++) {
                     const heart = document.createElement('div');
                     heart.classList.add('heart-particle');
                     heart.innerText = symbols[Math.floor(Math.random() * symbols.length)];
@@ -338,7 +345,7 @@
                     // المسح
                     setTimeout(() => { heart.remove(); }, 5000);
                 }
-            }, 300); 
+            }, 300); // سرعة متوسطة
         }
 
         function stopHeartRain() {
