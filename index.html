@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        /* --- إعدادات الصفحة --- */
+        /* --- إعدادات الصفحة (خفيفة) --- */
         body, html { 
             margin: 0; padding: 0; 
             height: 100%; width: 100%; 
@@ -18,57 +18,58 @@
         }
         * { box-sizing: border-box; }
 
-        /* --- نظام المشاهد --- */
+        /* --- نظام المشاهد (سريع) --- */
         .scene { 
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
             display: flex; flex-direction: column; justify-content: center; align-items: center; 
-            transition: all 0.8s ease-in-out; padding: 20px;
-            opacity: 0; pointer-events: none; transform: scale(0.95);
+            transition: opacity 0.5s ease, transform 0.5s ease; /* سرعنا الانتقال */
+            padding: 15px;
+            opacity: 0; pointer-events: none; transform: scale(0.98);
+            will-change: opacity, transform; /* تحسين الأداء */
         }
         .scene.visible { opacity: 1; pointer-events: all; transform: scale(1); }
 
         /* --- المشهد 1: المايل بوكس --- */
-        #header-text { color: #fff; font-size: 1.8em; margin-bottom: 20px; text-shadow: 0 4px 8px rgba(0,0,0,0.3); z-index: 100; text-align: center; }
-        .main-container { position: relative; width: 85%; max-width: 400px; display: flex; justify-content: center; }
-        .mailbox-bg { width: 100%; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.4)); }
-        .letter-container { position: absolute; top: 58%; left: 50%; width: 65%; transform: translate(-50%, -50%) scale(0.2); opacity: 0; z-index: 10; transition: all 2.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        #header-text { color: #fff; font-size: 1.8em; margin-bottom: 20px; text-shadow: 0 3px 6px rgba(0,0,0,0.2); z-index: 100; text-align: center; }
+        .main-container { position: relative; width: 85%; max-width: 380px; display: flex; justify-content: center; }
+        .mailbox-bg { width: 100%; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3)); }
+        
+        .letter-container { 
+            position: absolute; top: 58%; left: 50%; width: 65%; 
+            transform: translate(-50%, -50%) scale(0.2); 
+            opacity: 0; z-index: 10; 
+            transition: all 1.5s cubic-bezier(0.34, 1.56, 0.64, 1); /* نقصنا الوقت ل 1.5s */
+        }
         .letter-img { width: 100%; border-radius: 5px; }
         .letter-container.emerge { top: 45%; transform: translate(-50%, -50%) scale(1); opacity: 1; }
-        .click-btn { position: absolute; bottom: 5%; right: 5%; display: flex; align-items: center; gap: 8px; color: white; font-family: 'Amiri', serif; font-weight: bold; font-size: 1.1em; background: rgba(0,0,0,0.3); padding: 5px 15px; border-radius: 20px; cursor: pointer; z-index: 200; opacity: 0; pointer-events: none; transition: opacity 1s; }
+
+        .click-btn { 
+            position: absolute; bottom: 8%; right: 8%; 
+            display: flex; align-items: center; gap: 8px; color: white; 
+            font-family: 'Amiri', serif; font-weight: bold; font-size: 1.1em; 
+            background: rgba(0,0,0,0.2); padding: 5px 15px; border-radius: 20px; 
+            cursor: pointer; z-index: 200; opacity: 0; pointer-events: none; transition: opacity 0.5s; 
+        }
         .click-btn.visible { opacity: 1; pointer-events: all; }
         .arrow-circle { width: 25px; height: 25px; border: 2px solid white; border-radius: 50%; display: flex; justify-content: center; align-items: center; }
 
         /* --- المشاهد 2 & 3 --- */
-        .question-text, .angry-text { color: #fff; font-size: 1.6em; margin-bottom: 20px; text-align: center; }
-        .big-letter-img { width: 75%; max-width: 350px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .question-text, .angry-text { color: #fff; font-size: 1.5em; margin-bottom: 20px; text-align: center; }
+        .big-letter-img { width: 70%; max-width: 300px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
         .yes-no-buttons { display: flex; gap: 20px; }
-        .choice-btn { padding: 10px 30px; border: none; border-radius: 50px; font-family: 'Amiri', serif; font-size: 1.1em; font-weight: bold; cursor: pointer; }
+        .choice-btn { padding: 8px 30px; border: none; border-radius: 50px; font-family: 'Amiri', serif; font-size: 1.1em; font-weight: bold; cursor: pointer; }
         .btn-yes { background-color: #fff; color: #720e1e; }
         .btn-no { background-color: rgba(255,255,255,0.2); color: #fff; border: 2px solid rgba(255,255,255,0.5); }
-        .angry-cup-img { width: 140px; margin-bottom: 20px; animation: shake 0.5s infinite; }
-        .back-btn-container { display: flex; align-items: center; gap: 10px; color: white; cursor: pointer; border: 2px solid white; padding: 8px 25px; border-radius: 30px; margin-top: 10px; }
+        .angry-cup-img { width: 120px; margin-bottom: 20px; animation: shake 0.5s infinite; }
+        .back-btn-container { display: flex; align-items: center; gap: 8px; color: white; cursor: pointer; border: 2px solid white; padding: 6px 20px; border-radius: 30px; margin-top: 10px; }
 
-        /* ================== المشهد 4 (الورد الطالع) ================== */
-        .scene4-container { 
-            position: relative; width: 100%; height: 100%;
-            display: flex; justify-content: center; align-items: center; 
-        }
-        .center-piece-container { 
-            position: relative; 
-            display: flex; flex-direction: column; align-items: center; 
-            transition: all 0.5s ease;
-        }
-        .sneak-peek-img { 
-            width: 100%; border-radius: 10px; 
-            box-shadow: 0 15px 40px rgba(0,0,0,0.6); 
-            border: 3px solid #fff; z-index: 20; position: relative; 
-        }
-        .flower-wrapper { position: absolute; z-index: 5; cursor: pointer; }
-        .peeking-flower { width: 100%; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.4)); transition: transform 0.3s; }
-        .flower-hint-container { 
-            position: absolute; display: flex; flex-direction: column; align-items: center;
-            text-align: center; z-index: 30; transition: all 0.5s ease;
-        }
+        /* ================== المشهد 4 (الورد) ================== */
+        .scene4-container { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
+        .center-piece-container { position: relative; display: flex; flex-direction: column; align-items: center; transition: all 0.5s ease; }
+        .sneak-peek-img { width: 100%; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 3px solid #fff; z-index: 20; position: relative; }
+        .flower-wrapper { position: absolute; z-index: 5; cursor: pointer; will-change: transform; }
+        .peeking-flower { width: 100%; filter: drop-shadow(0 3px 6px rgba(0,0,0,0.3)); transition: transform 0.3s; }
+        .flower-hint-container { position: absolute; display: flex; flex-direction: column; align-items: center; text-align: center; z-index: 30; }
         .click-hint-text { color: white; font-family: 'Dancing Script', cursive; white-space: nowrap; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
         .doodle-arrow { filter: invert(1) drop-shadow(0 2px 2px rgba(0,0,0,0.5)); animation: pointDown 1s ease-in-out infinite alternate; }
 
@@ -76,10 +77,8 @@
         @media (min-width: 769px) {
             .center-piece-container { width: 320px; }
             .flower-wrapper { top: 15%; width: 150px; }
-            .flower-wrapper.left { left: -120px; }
-            .flower-wrapper.left .peeking-flower { transform: rotate(-20deg); }
-            .flower-wrapper.right { right: -120px; }
-            .flower-wrapper.right .peeking-flower { transform: scaleX(-1) rotate(20deg); } 
+            .flower-wrapper.left { left: -120px; } .flower-wrapper.left .peeking-flower { transform: rotate(-20deg); }
+            .flower-wrapper.right { right: -120px; } .flower-wrapper.right .peeking-flower { transform: scaleX(-1) rotate(20deg); } 
             .flower-hint-container { top: -70px; width: 120px; left: 50%; transform: translateX(-50%); }
             .click-hint-text { font-size: 1.3em; margin-bottom: 5px; }
             .doodle-arrow { width: 45px; }
@@ -87,107 +86,63 @@
 
         /* Mobile Layout */
         @media (max-width: 768px) {
-            .center-piece-container { width: 80%; max-width: 280px; margin-top: 100px; }
-            .flower-wrapper { top: -115px; width: 150px; }
-            .flower-wrapper.left { left: -40px; }
-            .flower-wrapper.left .peeking-flower { transform: rotate(-30deg); }
-            .flower-wrapper.right { right: -40px; }
-            .flower-wrapper.right .peeking-flower { transform: scaleX(-1) rotate(30deg); }
-            .flower-hint-container { top: -60px; width: 100px; left: 50%; transform: translateX(-50%); }
-            .click-hint-text { font-size: 1.2em; margin-bottom: 2px; }
-            .doodle-arrow { width: 40px; }
+            .center-piece-container { width: 75%; max-width: 260px; margin-top: 80px; }
+            .flower-wrapper { top: -100px; width: 140px; }
+            .flower-wrapper.left { left: -35px; } .flower-wrapper.left .peeking-flower { transform: rotate(-30deg); }
+            .flower-wrapper.right { right: -35px; } .flower-wrapper.right .peeking-flower { transform: scaleX(-1) rotate(30deg); }
+            .flower-hint-container { top: -55px; width: 100px; left: 50%; transform: translateX(-50%); }
+            .click-hint-text { font-size: 1.1em; margin-bottom: 2px; }
+            .doodle-arrow { width: 35px; }
         }
 
-        .show-msg-btn { background: transparent; border: 2px solid white; color: white; padding: 10px 35px; font-size: 1.4em; border-radius: 50px; margin-top: 40px; cursor: pointer; z-index: 30; font-family: 'Amiri', serif; font-weight: bold; transition: 0.3s; }
-        .show-msg-btn:hover { background: white; color: #720e1e; }
-        @keyframes pointDown { from { transform: translateY(0); } to { transform: translateY(8px); } }
+        .show-msg-btn { background: transparent; border: 2px solid white; color: white; padding: 8px 30px; font-size: 1.3em; border-radius: 50px; margin-top: 35px; cursor: pointer; z-index: 30; font-family: 'Amiri', serif; font-weight: bold; }
+        @keyframes pointDown { from { transform: translateY(0); } to { transform: translateY(6px); } }
 
-
-        /* ================== المشهد 5 & 6 (إصلاح مكان الورد) ================== */
-        
+        /* ================== المشهد 5 & 6 (البطاقات - نسخة خفيفة) ================== */
         .letter-card-container, .final-image-container {
-            width: 95%; max-width: 450px; 
-            background-color: #fffbf0; 
-            border-radius: 15px; 
-            box-shadow: 0 15px 50px rgba(0,0,0,0.6); 
-            text-align: center; 
-            border: 4px solid #fff;
-            height: 80vh; 
+            width: 90%; max-width: 400px; 
+            background-color: #fffbf0; border-radius: 12px; 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5); 
+            text-align: center; border: 3px solid #fff;
+            max-height: 85vh; /* مايفوتش الشاشة */
+            overflow-y: auto; /* سكرول سامبل وخفيف */
+            padding: 15px;
             position: relative; z-index: 10;
-            animation: popIn 1s forwards; 
-            display: flex; flex-direction: column; 
-            overflow: hidden;
-        }
-
-        .final-image-container { overflow-y: auto; align-items: center; padding: 20px; }
-
-        /* المحتوى الداخلي المتحرك */
-        .card-content-scroll {
-            width: 100%;
-            height: 100%;
-            overflow-y: auto; 
-            padding: 20px;
+            animation: popIn 0.8s forwards;
             display: flex; flex-direction: column; align-items: center;
-            z-index: 10;
-            position: relative; /* ضروري باش الوردة التحتانية تشد فيه */
         }
 
         .final-img { width: 100%; border-radius: 8px; margin-bottom: 10px; }
-        .bday-msg-top, .card-title { color: #d32f2f; font-family: 'Dancing Script', cursive; font-size: 1.8em; margin-bottom: 15px; }
+        .bday-msg-top, .card-title { color: #d32f2f; font-family: 'Dancing Script', cursive; font-size: 1.8em; margin-bottom: 10px; }
         
-        /* --- ورد القنات --- */
-        .card-corner-flower { 
-            width: 60px; 
-            position: absolute; 
-            z-index: 20; 
-            opacity: 0.9;
-            pointer-events: none; 
-        }
-        
-        /* وردة الفوق (ثابتة مع الكادر) */
-        .card-corner-flower.top-left { 
-            top: -5px; left: -5px; 
-            transform: rotate(-45deg); 
-        }
-        
-        /* وردة التحت (تتحرك مع السكرول وتكون فالقاع) */
-        .card-corner-flower.bottom-right { 
-            position: absolute; /* داخل السكرول */
-            bottom: 0px; 
-            right: 0px; 
-            transform: rotate(135deg); 
-            z-index: 20;
-        }
-
-        .photos-row { display: flex; justify-content: center; gap: 10px; margin-bottom: 15px; flex-shrink: 0; }
-        .photo-frame { width: 80px; height: 80px; background: white; padding: 3px; border: 1px solid #ddd; transform: rotate(-3deg); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .photos-row { display: flex; justify-content: center; gap: 8px; margin-bottom: 15px; }
+        .photo-frame { width: 75px; height: 75px; background: white; padding: 2px; border: 1px solid #ddd; transform: rotate(-3deg); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .photo-frame:nth-child(2) { transform: rotate(3deg); }
         .photo-frame img { width: 100%; height: 100%; object-fit: cover; }
         
         .love-letter-text { 
-            font-family: 'Amiri', serif; font-size: 1em; line-height: 1.7; color: #444; 
+            font-family: 'Amiri', serif; font-size: 1em; line-height: 1.6; color: #444; 
             white-space: pre-line; width: 100%; padding-bottom: 10px; 
-            background-image: linear-gradient(#f0f0f0 1px, transparent 1px); background-size: 100% 1.7em; 
+            background-image: linear-gradient(#f0f0f0 1px, transparent 1px); background-size: 100% 1.6em; 
         }
         
         .highlight-text { color: #d32f2f; font-weight: bold; }
-        .footer-heart { font-size: 1.5em; color: #d32f2f; margin-top: 10px; }
+        .footer-heart { font-size: 1.4em; color: #d32f2f; margin-top: 5px; }
         
         /* زر الرجوع */
         .back-btn-card { 
-            margin-top: 10px; 
-            background: #d32f2f; color: white; border: none; 
-            padding: 8px 25px; border-radius: 20px; 
-            cursor: pointer; font-family: 'Poppins', sans-serif; font-weight: bold; 
+            margin-top: 15px; background: #d32f2f; color: white; border: none; 
+            padding: 6px 20px; border-radius: 20px; cursor: pointer; 
+            font-family: 'Poppins', sans-serif; font-weight: bold; 
             display: inline-flex; align-items: center; gap: 5px; 
-            margin-bottom: 40px; /* فراغ كبير باش الوردة تجي تحتو */
         }
 
         @keyframes popIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
         @keyframes shake { 0% { transform: rotate(0deg); } 25% { transform: rotate(5deg); } 75% { transform: rotate(-5deg); } 100% { transform: rotate(0deg); } }
         
+        /* الانفجار الخفيف */
         #explosion-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 100; overflow: hidden; }
-        .particle { position: absolute; top: 50%; left: 50%; width: 30px; height: 30px; opacity: 0; display: flex; justify-content: center; align-items: center; font-size: 20px; }
+        .particle { position: absolute; top: 50%; left: 50%; width: 20px; height: 20px; opacity: 0; display: flex; justify-content: center; align-items: center; font-size: 18px; }
         @keyframes flyOut { to { opacity: 0; transform: translate(var(--dir-x), var(--dir-y)) scale(var(--scale-end)) rotate(var(--rot-end)); } }
     </style>
 </head>
@@ -253,7 +208,7 @@
         <div class="final-image-container">
             <h1 class="bday-msg-top">عيد ميلاد سعيد إلهام ❤️</h1>
             <img src="1000039396.png" class="final-img" alt="Bouquet">
-            <div class="back-btn-container" style="background:#d32f2f; margin-top:10px;" onclick="goBackToScene4()">
+            <div class="back-btn-container" style="background:#d32f2f; margin-top:5px;" onclick="goBackToScene4()">
                 <i class="fa-solid fa-arrow-right" style="transform: rotate(180deg);"></i>
                 <span>رجوع</span>
             </div>
@@ -262,17 +217,14 @@
 
     <div id="scene6" class="scene">
         <div class="letter-card-container">
-            <img src="1000039360.png" class="card-corner-flower top-left">
+            <h1 class="card-title">عيد ميلاد سعيد إلهام</h1>
 
-            <div class="card-content-scroll">
-                <h1 class="card-title">عيد ميلاد سعيد إلهام</h1>
+            <div class="photos-row">
+                <div class="photo-frame"><img src="1000039376.png" alt="1"></div>
+                <div class="photo-frame"><img src="1000039358.jpg" alt="2"></div>
+            </div>
 
-                <div class="photos-row">
-                    <div class="photo-frame"><img src="1000039376.png" alt="1"></div>
-                    <div class="photo-frame"><img src="1000039358.jpg" alt="2"></div>
-                </div>
-
-                <div class="love-letter-text">
+            <div class="love-letter-text">
 في بحال هاد النهار، تزادت أجمل حاجة وقعات ليا جوج مرات فحياتي:
 <span class="highlight-text">الأولى فاش كنا صغار فالإبتدائي، والتانية فاش تعارفنا تاني.</span>
 
@@ -287,21 +239,19 @@
 كل عام وأنتِ منورة حياتي، كل عام وأنتِ حدايا ومعايا. كنتمنى ربي يحقق ليك كاع الأحلام ديالك ويعطيك ما تمنيتي فخاطرك.
 
 كنبغيك بزاف، وعيد ميلاد سعيد يا أميرتي. 👑❤️
-                </div>
-
-                <button class="back-btn-card" onclick="goBackToScene4()">
-                    <i class="fa-solid fa-arrow-right" style="transform: rotate(180deg);"></i> رجوع
-                </button>
-
-                <img src="1000039360.png" class="card-corner-flower bottom-right">
             </div>
+
+            <button class="back-btn-card" onclick="goBackToScene4()">
+                <i class="fa-solid fa-arrow-right" style="transform: rotate(180deg);"></i> رجوع
+            </button>
         </div>
     </div>
 
     <script>
+        // Start Faster
         window.onload = function() {
-            setTimeout(() => { document.getElementById('myLetter').classList.add('emerge'); }, 500);
-            setTimeout(() => { document.getElementById('triggerBtn').classList.add('visible'); }, 3000);
+            setTimeout(() => { document.getElementById('myLetter').classList.add('emerge'); }, 200); // 0.2s only
+            setTimeout(() => { document.getElementById('triggerBtn').classList.add('visible'); }, 1200); // 1.2s only
         };
 
         function transitionToScene2() { switchScene('scene1', 'scene2'); }
@@ -311,24 +261,24 @@
         
         function transitionToScene5() {
             switchScene('scene4', 'scene5');
-            setTimeout(triggerExplosion, 500);
+            setTimeout(triggerExplosion, 400);
         }
         function transitionToScene6() {
             switchScene('scene4', 'scene6');
         }
         function goBackToScene4() {
             document.querySelectorAll('.scene').forEach(el => el.classList.remove('visible'));
-            setTimeout(() => { document.getElementById('scene4').classList.add('visible'); }, 600);
+            setTimeout(() => { document.getElementById('scene4').classList.add('visible'); }, 500);
         }
 
         function switchScene(from, to) {
             document.getElementById(from).classList.remove('visible');
-            setTimeout(() => { document.getElementById(to).classList.add('visible'); }, 600);
+            setTimeout(() => { document.getElementById(to).classList.add('visible'); }, 500);
         }
 
         function triggerExplosion() {
             const container = document.getElementById('explosion-container');
-            const particlesCount = 100; 
+            const particlesCount = 80; // Reduced for performance
             const elements = ['<img src="1000039360.png" style="width:100%;height:100%;object-fit:contain;">', '❤️', '💖', '🌸', '✨'];
             for (let i = 0; i < particlesCount; i++) {
                 const particle = document.createElement('div');
@@ -336,7 +286,7 @@
                 const randomEl = elements[Math.floor(Math.random() * elements.length)];
                 particle.innerHTML = randomEl;
                 const angle = Math.random() * 360;
-                const distance = 200 + Math.random() * 400;
+                const distance = 150 + Math.random() * 350;
                 const dirX = Math.cos(angle * Math.PI / 180) * distance + 'px';
                 const dirY = Math.sin(angle * Math.PI / 180) * distance + 'px';
                 const scaleEnd = 0.5 + Math.random();
@@ -345,9 +295,9 @@
                 particle.style.setProperty('--dir-y', dirY);
                 particle.style.setProperty('--scale-end', scaleEnd);
                 particle.style.setProperty('--rot-end', rotEnd);
-                particle.style.animation = `flyOut ${1.5 + Math.random()}s ease-out forwards`;
+                particle.style.animation = `flyOut ${1 + Math.random()}s ease-out forwards`;
                 container.appendChild(particle);
-                setTimeout(() => { particle.remove(); }, 3000);
+                setTimeout(() => { particle.remove(); }, 2500);
             }
         }
     </script>
