@@ -8,96 +8,56 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        /* --- 1. إعدادات الصفحة الأساسية --- */
+        /* --- إعدادات الصفحة --- */
         body, html { 
             margin: 0; padding: 0; 
             height: 100%; width: 100%; 
-            background-color: #720e1e; /* لون الكرز الغامق */
+            background-color: #720e1e; 
             font-family: 'Amiri', serif; 
             overflow: hidden; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center;
+            display: flex; justify-content: center; align-items: center; /* سنطراج حقيقي */
         }
         * { box-sizing: border-box; }
 
-        /* --- 2. نظام المشاهد (مقاد للوسط) --- */
+        /* --- نظام المشاهد --- */
         .scene { 
-            position: absolute; 
-            top: 0; left: 0; 
-            width: 100%; height: 100%; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: center; 
-            align-items: center; 
-            padding: 20px; /* باش مايلصقش فالحيط */
+            position: absolute; width: 100%; height: 100%; 
+            display: flex; flex-direction: column; justify-content: center; align-items: center; 
             transition: all 0.8s ease-in-out; 
-            opacity: 0; pointer-events: none; /* مخفي افتراضيا */
-            transform: scale(0.9);
+            opacity: 0; pointer-events: none; transform: scale(0.9);
         }
+        .scene.visible { opacity: 1; pointer-events: all; transform: scale(1); }
+
+        /* --- المشهد 1: المايل بوكس --- */
+        #header-text { color: #fff; font-size: 1.8em; margin-bottom: 20px; text-shadow: 0 4px 8px rgba(0,0,0,0.3); z-index: 100; text-align: center; }
+        .main-container { position: relative; width: 85%; max-width: 400px; display: flex; justify-content: center; }
+        .mailbox-bg { width: 100%; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.4)); }
         
-        .scene.visible { 
-            opacity: 1; pointer-events: all; 
-            transform: scale(1); 
-        }
-
-        /* --- 3. المشهد 1: المايل بوكس --- */
-        #header-text { 
-            color: #fff; font-size: 1.8em; margin-bottom: 20px; 
-            text-shadow: 0 4px 8px rgba(0,0,0,0.3); z-index: 100; text-align: center; 
-        }
-
-        .main-container { 
-            position: relative; 
-            width: 80%; /* شاد 80% من العرض */
-            max-width: 400px; /* مايفوتش 400 بيكسل فالبيسي */
-            display: flex; justify-content: center; align-items: center;
-        }
-
-        .mailbox-bg { 
-            width: 100%; height: auto; display: block; 
-            filter: drop-shadow(0 15px 30px rgba(0,0,0,0.4)); 
-        }
-
-        .letter-container { 
-            position: absolute; 
-            top: 58%; left: 50%; 
-            width: 65%; /* حجم الرسالة بالنسبة للصندوق */
-            transform: translate(-50%, -50%) scale(0.2); 
-            opacity: 0; z-index: 10; 
-            transition: all 2.5s cubic-bezier(0.34, 1.56, 0.64, 1); 
-        }
-        
-        .letter-img { width: 100%; border-radius: 5px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .letter-container { position: absolute; top: 58%; left: 50%; width: 65%; transform: translate(-50%, -50%) scale(0.2); opacity: 0; z-index: 10; transition: all 2.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .letter-img { width: 100%; border-radius: 5px; }
         .letter-container.emerge { top: 45%; transform: translate(-50%, -50%) scale(1); opacity: 1; }
 
-        /* زر "وركي تشوفي" */
         .click-btn { 
-            position: absolute; 
-            bottom: 10px; right: 10px; /* جا لتحت فالقنت */
-            display: flex; align-items: center; gap: 8px; 
-            color: white; font-family: 'Amiri', serif; font-weight: bold; font-size: 1.1em;
-            background: rgba(0,0,0,0.3); padding: 5px 12px; border-radius: 20px;
-            cursor: pointer; z-index: 200; opacity: 0; pointer-events: none; 
-            transition: opacity 1s;
+            position: absolute; bottom: 5%; right: 5%; 
+            display: flex; align-items: center; gap: 8px; color: white; 
+            font-family: 'Amiri', serif; font-weight: bold; font-size: 1.1em;
+            background: rgba(0,0,0,0.3); padding: 5px 15px; border-radius: 20px;
+            cursor: pointer; z-index: 200; opacity: 0; pointer-events: none; transition: opacity 1s;
         }
         .click-btn.visible { opacity: 1; pointer-events: all; }
-        .arrow-circle { width: 25px; height: 25px; border: 2px solid white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 0.8em; }
+        .arrow-circle { width: 25px; height: 25px; border: 2px solid white; border-radius: 50%; display: flex; justify-content: center; align-items: center; }
 
-
-        /* --- 4. المشاهد: السؤال والخطأ --- */
-        .question-text, .angry-text { color: #fff; font-size: 1.6em; margin-bottom: 20px; text-align: center; line-height: 1.4; }
-        .big-letter-img { width: 75%; max-width: 350px; border-radius: 10px; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .angry-cup-img { width: 140px; margin-bottom: 20px; animation: shake 0.5s infinite; }
-        
-        .yes-no-buttons { display: flex; gap: 20px; justify-content: center; }
-        .choice-btn { padding: 10px 40px; border: none; border-radius: 50px; font-family: 'Amiri', serif; font-size: 1.2em; font-weight: bold; cursor: pointer; }
+        /* --- المشاهد 2 & 3 --- */
+        .question-text, .angry-text { color: #fff; font-size: 1.6em; margin-bottom: 20px; text-align: center; }
+        .big-letter-img { width: 70%; max-width: 350px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .yes-no-buttons { display: flex; gap: 20px; }
+        .choice-btn { padding: 10px 30px; border: none; border-radius: 50px; font-family: 'Amiri', serif; font-size: 1.1em; font-weight: bold; cursor: pointer; }
         .btn-yes { background-color: #fff; color: #720e1e; }
         .btn-no { background-color: rgba(255,255,255,0.2); color: #fff; border: 2px solid rgba(255,255,255,0.5); }
-        .back-btn-container { display: flex; align-items: center; gap: 10px; color: white; cursor: pointer; border: 2px solid white; padding: 8px 25px; border-radius: 30px; }
+        .angry-cup-img { width: 140px; margin-bottom: 20px; animation: shake 0.5s infinite; }
+        .back-btn-container { display: flex; align-items: center; gap: 10px; color: white; cursor: pointer; border: 2px solid white; padding: 8px 25px; border-radius: 30px; margin-top: 10px; }
 
-
-        /* --- 5. المشهد 4: الورد والرسالة (الإصلاح المهم للموبايل) --- */
+        /* ================== المشهد 4 (الإصلاح الجذري للورد) ================== */
         .scene4-container { 
             position: relative; width: 100%; 
             display: flex; justify-content: center; align-items: center; 
@@ -105,81 +65,130 @@
 
         .center-piece-container { 
             position: relative; 
-            width: 260px; /* عرض ثابت ومناسب للتليفون */
-            height: auto; 
+            /* هنا السر: صغرنا العرض باش الورد يبان فالجناب */
+            width: 240px; 
+            /* فالبيسي نكبروه شوية */
+            max-width: 320px; 
             display: flex; flex-direction: column; align-items: center; 
-            margin-top: 20px;
+            margin-top: 20px; /* باش نبعدو على العنوان */
         }
 
+        /* الصورة الوسطانية */
         .sneak-peek-img { 
-            width: 100%; border-radius: 10px; 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5); border: 3px solid #fff; 
-            z-index: 20; position: relative; 
+            width: 100%; /* كتاخد العرض ديال الكونتينر (240px) */
+            border-radius: 10px; 
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6); 
+            border: 3px solid #fff; 
+            z-index: 20; /* فوق الورد */
+            position: relative; 
         }
 
-        /* الورد فالجناب: قربناهوم باش مايتقطعوش */
-        .flower-wrapper { position: absolute; z-index: 5; top: 15%; width: 100px; cursor: pointer; }
-        .peeking-flower { width: 100%; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.3)); }
+        /* حاوية الورد */
+        .flower-wrapper { 
+            position: absolute; 
+            z-index: 5; /* تحت الصورة */
+            top: 15%; /* هابطين شوية من الفوق */
+            width: 130px; /* عرض الوردة */
+            cursor: pointer; 
+            transition: transform 0.3s;
+        }
         
-        /* ضبط الوضعية (Positioning) للموبايل */
-        .flower-wrapper.left { left: -45px; transform: rotate(-15deg); }
-        .flower-wrapper.right { right: -45px; transform: rotate(15deg) scaleX(-1); }
+        .peeking-flower { 
+            width: 100%; 
+            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.4)); 
+        }
 
-        /* الأسهم */
+        /* --- وضعيات الورد (PC & Mobile) --- */
+        
+        /* 1. الوضعية الافتراضية (Mobile) */
+        .flower-wrapper.left { 
+            left: -85px; /* خارجة لليسار بزاااف باش تطل */
+            transform: rotate(-15deg); 
+        }
+        .flower-wrapper.right { 
+            right: -85px; /* خارجة لليمين بزاااف باش تطل */
+            transform: rotate(15deg) scaleX(-1); 
+        }
+
+        /* 2. تحسينات للشاشات الكبيرة (PC) */
+        @media (min-width: 768px) {
+            .center-piece-container { width: 320px; }
+            .flower-wrapper.left { left: -110px; }
+            .flower-wrapper.right { right: -110px; }
+        }
+
+        /* الأسهم والكتبة "وركي هنا" */
         .flower-hint-container { 
-            position: absolute; top: -50px; width: 100px; text-align: center; z-index: 30;
+            position: absolute; 
+            top: -60px; /* فوق الورد */
+            left: 50%; transform: translateX(-50%); 
+            width: 120px; text-align: center; z-index: 30;
             display: flex; flex-direction: column; align-items: center;
         }
-        .flower-wrapper.left .flower-hint-container { left: 0; }
-        .flower-wrapper.right .flower-hint-container { right: 0; }
+        
+        .click-hint-text { 
+            color: white; font-family: 'Dancing Script', cursive; 
+            font-size: 1.2em; white-space: nowrap; margin-bottom: 5px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .doodle-arrow { 
+            width: 40px; 
+            filter: invert(1) drop-shadow(0 2px 2px rgba(0,0,0,0.5)); 
+            animation: pointDown 1s ease-in-out infinite alternate; 
+        }
+        /* قلبنا السهم اليميني باش يجي مواتي */
+        .flower-wrapper.right .doodle-arrow { transform: scaleX(-1); animation: pointDownRight 1s ease-in-out infinite alternate; }
 
-        .click-hint-text { color: white; font-family: 'Dancing Script', cursive; font-size: 1.1em; white-space: nowrap; }
-        .doodle-arrow { width: 35px; filter: invert(1); animation: pointDown 1s ease-in-out infinite alternate; }
-        .flower-wrapper.right .doodle-arrow { transform: scaleX(-1); }
-
+        /* الزر "بين رسالة" */
         .show-msg-btn { 
             background: transparent; border: 2px solid white; color: white; 
-            padding: 10px 30px; font-size: 1.3em; border-radius: 50px; 
-            margin-top: 40px; cursor: pointer; z-index: 30; font-family: 'Amiri', serif; font-weight: bold; 
+            padding: 10px 35px; font-size: 1.4em; border-radius: 50px; 
+            margin-top: 45px; cursor: pointer; z-index: 30; 
+            font-family: 'Amiri', serif; font-weight: bold; 
+            transition: 0.3s;
         }
+        .show-msg-btn:hover { background: white; color: #720e1e; }
 
-        /* --- 6. المشهد 5 و 6 (البطاقات) --- */
+
+        /* ================== المشهد 5 & 6 (البطاقات) ================== */
         .final-image-container, .letter-card-container {
-            width: 85%; max-width: 450px; 
+            width: 90%; max-width: 450px; 
             background-color: #fffbf0; border-radius: 15px; padding: 20px;
             box-shadow: 0 15px 50px rgba(0,0,0,0.6); 
             text-align: center; border: 4px solid #fff;
-            max-height: 80vh; overflow-y: auto; /* سكرول يلا كانت طويلة */
-            display: flex; flex-direction: column; align-items: center;
+            max-height: 85vh; overflow-y: auto;
             position: relative; z-index: 10;
+            animation: popIn 1s forwards;
+            display: flex; flex-direction: column; align-items: center;
         }
 
-        .final-img { width: 100%; border-radius: 8px; margin-bottom: 15px; }
-        .card-title { font-family: 'Dancing Script', cursive; font-size: 2em; color: #d32f2f; margin: 10px 0; }
+        .final-img { width: 100%; border-radius: 8px; margin-bottom: 10px; }
+        .bday-msg-top, .card-title { color: #d32f2f; font-family: 'Dancing Script', cursive; font-size: 2em; margin-bottom: 15px; }
         
-        .photos-row { display: flex; justify-content: center; gap: 10px; margin-bottom: 15px; }
-        .photo-frame { width: 90px; height: 90px; background: white; padding: 3px; border: 1px solid #ddd; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .photo-frame img { width: 100%; height: 100%; object-fit: cover; }
-
-        .love-letter-text { 
-            font-family: 'Amiri', serif; font-size: 1em; line-height: 1.8; color: #444; 
-            background-image: linear-gradient(#f0f0f0 1px, transparent 1px); background-size: 100% 1.8em; 
-            width: 100%; padding-bottom: 10px; white-space: pre-line;
-        }
-
-        .highlight-text { color: #d32f2f; font-weight: bold; }
-        
-        /* الورد فجناب البطاقة */
-        .card-corner-flower { width: 50px; position: absolute; z-index: 5; opacity: 0.8; }
+        .card-corner-flower { width: 60px; position: absolute; z-index: 5; opacity: 0.8; }
         .card-corner-flower.top-left { top: -10px; left: -10px; transform: rotate(-45deg); }
         .card-corner-flower.bottom-right { bottom: -10px; right: -10px; transform: rotate(135deg); }
 
-        /* الأنيميشن */
+        .photos-row { display: flex; justify-content: center; gap: 10px; margin-bottom: 15px; }
+        .photo-frame { width: 90px; height: 90px; background: white; padding: 3px; border: 1px solid #ddd; transform: rotate(-3deg); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .photo-frame:nth-child(2) { transform: rotate(3deg); }
+        .photo-frame img { width: 100%; height: 100%; object-fit: cover; }
+
+        .love-letter-text { 
+            font-family: 'Amiri', serif; font-size: 1.1em; line-height: 1.8; color: #444; 
+            white-space: pre-line; width: 100%; padding-bottom: 10px;
+            background-image: linear-gradient(#f0f0f0 1px, transparent 1px); background-size: 100% 1.8em;
+        }
+        .highlight-text { color: #d32f2f; font-weight: bold; }
+        .footer-heart { font-size: 1.5em; color: #d32f2f; margin-top: 10px; }
+
+        /* Animation */
         @keyframes popIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
         @keyframes shake { 0% { transform: rotate(0deg); } 25% { transform: rotate(5deg); } 75% { transform: rotate(-5deg); } 100% { transform: rotate(0deg); } }
         @keyframes pointDown { from { transform: translateY(0); } to { transform: translateY(5px); } }
+        @keyframes pointDownRight { from { transform: translateY(0) scaleX(-1); } to { transform: translateY(5px) scaleX(-1); } }
         
-        /* الانفجار */
         #explosion-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 100; overflow: hidden; }
         .particle { position: absolute; top: 50%; left: 50%; width: 30px; height: 30px; opacity: 0; display: flex; justify-content: center; align-items: center; font-size: 20px; }
         @keyframes flyOut { to { opacity: 0; transform: translate(var(--dir-x), var(--dir-y)) scale(var(--scale-end)) rotate(var(--rot-end)); } }
@@ -296,13 +305,11 @@
     </div>
 
     <script>
-        // Start Animation
         window.onload = function() {
             setTimeout(() => { document.getElementById('myLetter').classList.add('emerge'); }, 500);
             setTimeout(() => { document.getElementById('triggerBtn').classList.add('visible'); }, 3000);
         };
 
-        // Navigation Functions
         function transitionToScene2() { switchScene('scene1', 'scene2'); }
         function handleNo() { switchScene('scene2', 'scene3'); }
         function goBackToScene2() { switchScene('scene3', 'scene2'); }
@@ -316,35 +323,24 @@
             switchScene('scene4', 'scene6');
         }
         function goBackToScene4() {
-            document.querySelectorAll('.scene').forEach(el => {
-                el.classList.remove('visible');
-                // el.classList.add('hidden'); // Removed to fix overlap flicker
-            });
-            setTimeout(() => {
-                document.getElementById('scene4').classList.add('visible');
-            }, 600);
+            document.querySelectorAll('.scene').forEach(el => el.classList.remove('visible'));
+            setTimeout(() => { document.getElementById('scene4').classList.add('visible'); }, 600);
         }
 
-        // Helper
         function switchScene(from, to) {
             document.getElementById(from).classList.remove('visible');
-            setTimeout(() => {
-                document.getElementById(to).classList.add('visible');
-            }, 600);
+            setTimeout(() => { document.getElementById(to).classList.add('visible'); }, 600);
         }
 
-        // Explosion Effect
         function triggerExplosion() {
             const container = document.getElementById('explosion-container');
-            const particlesCount = 100; // نقصنا العدد شوية باش مايتقلش التليفون
+            const particlesCount = 100; 
             const elements = ['<img src="1000039360.png" style="width:100%;height:100%;object-fit:contain;">', '❤️', '💖', '🌸', '✨'];
-            
             for (let i = 0; i < particlesCount; i++) {
                 const particle = document.createElement('div');
                 particle.classList.add('particle');
                 const randomEl = elements[Math.floor(Math.random() * elements.length)];
                 particle.innerHTML = randomEl;
-                
                 const angle = Math.random() * 360;
                 const distance = 200 + Math.random() * 400;
                 const dirX = Math.cos(angle * Math.PI / 180) * distance + 'px';
