@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مفاجأة لإلهام</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Dancing+Script:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        /* --- إعدادات عامة (اللون الجديد الغامق) --- */
+        body, html { margin: 0; padding: 0; height: 100%; width: 100%; background-color: #720e1e; font-family: 'Amiri', serif; overflow: hidden; }
+        * { box-sizing: border-box; }
+
+        /* --- نظام المشاهد --- */
+        .scene { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: all 0.8s ease-in-out; }
+        .scene.hidden { opacity: 0; pointer-events: none; transform: scale(0.8) translateY(50px); filter: blur(10px); }
+        .scene.visible { opacity: 1; pointer-events: all; transform: scale(1) translateY(0); filter: blur(0); }
+
+        /* ================== المشهد 1: المايل بوكس (تعديل الحركة والزر) ================== */
+        #header-text { color: #fff; font-size: 2.5em; margin-bottom: 20px; text-shadow: 0 4px 8px rgba(0,0,0,0.3); z-index: 100; }
+        .main-container { position: relative; width: 95%; max-width: 600px; aspect-ratio: 3 / 4; display: flex; justify-content: center; align-items: center; }
+        
+        /* المايل بوكس */
+        .mailbox-bg { width: 100%; display: block; z-index: 5; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.4)); position: relative; }
+        
+        /* الرسالة (الحركة المحسنة) */
+        .letter-container {
+            position: absolute;
+            /* البداية: هبطناها شوية (57%) باش تجي مع المستطيل الكحل */
+            top: 57%; 
+            left: 50%;
+            width: 65%; /* صغرناها شوية باش تدخل فالفم */
+            transform: translate(-50%, -50%) scale(0.2); /* كتبدا صغيرة بزاف */
+            opacity: 0;
+            z-index: 10; /* فوق الصندوق */
+            /* حركة مركبة: كتكبر وكتطلع ف نفس الوقت */
+            transition: all 2.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .letter-img { width: 100%; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        
+        /* فاش كتخرج */
+        .letter-container.emerge {
+            /* النهاية: كطلع للفوق (48%) وكتكبر للحجم الطبيعي */
+            top: 48%;
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        /* الزر الجديد "وركي تشوفي" */
+        .click-btn {
+            position: absolute;
+            bottom: 40px;
+            right: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+            font-family: 'Amiri', serif; /* خط عربي */
+            font-weight: bold;
+            font-size: 1.3em;
+            cursor: pointer;
+            z-index: 200;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s ease;
+            pointer-events: none;
+        }
+        .click-btn.visible { opacity: 1; transform: translateY(0); pointer-events: all; }
+        
+        .arrow-circle { width: 45px; height: 25px; border: 2px solid white; border-radius: 20px; display: flex; justify-content: center; align-items: center; transition: transform 0.3s; }
+        .arrow-circle i { font-size: 0.8em; }
+        .click-btn:hover .arrow-circle { transform: translateX(-5px); background: rgba(255,255,255,0.1); } /* السهم يتحرك لليسار حيت العربية */
+
+        /* ================== باقي المشاهد (نفس اللوجيك) ================== */
+        .question-text { color: #fff; font-size: 2.2em; margin-bottom: 30px; text-align: center; text-shadow: 0 3px 6px rgba(0,0,0,0.3); }
+        .big-letter-img { width: 85%; max-width: 500px; border-radius: 10px; box-shadow: 0 15px 40px rgba(0,0,0,0.5); margin-bottom: 40px; }
+        .yes-no-buttons { display: flex; gap: 25px; }
+        .choice-btn { padding: 12px 40px; border: none; border-radius: 50px; font-family: 'Amiri', serif; font-size: 1.3em; font-weight: bold; cursor: pointer; transition: transform 0.2s; }
+        .btn-yes { background-color: #fff; color: #720e1e; }
+        .btn-no { background-color: rgba(255, 255, 255, 0.2); color: #fff; border: 2px solid rgba(255, 255, 255, 0.5); }
+        .choice-btn:hover { transform: scale(1.05); }
+        .angry-cup-img { width: 180px; margin-bottom: 20px; animation: shake 0.5s infinite; }
+        .angry-text { color: #fff; font-size: 1.8em; text-align: center; line-height: 1.6; margin-bottom: 40px; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        .back-btn-container { display: flex; align-items: center; gap: 10px; color: white; cursor: pointer; border: 2px solid white; padding: 10px 25px; border-radius: 30px; transition: background 0.3s; }
+        .back-btn-container:hover { background: rgba(255,255,255,0.2); }
+        @keyframes shake { 0% { transform: rotate(0deg); } 25% { transform: rotate(5deg); } 50% { transform: rotate(0deg); } 75% { transform: rotate(-5deg); } 100% { transform: rotate(0deg); } }
+
+        /* Scene 4 */
+        .scene4-container { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
+        .center-piece-container { position: relative; width: 300px; height: auto; display: flex; flex-direction: column; align-items: center; }
+        .sneak-peek-img { width: 100%; border-radius: 10px; box-shadow: 0 15px 35px rgba(0,0,0,0.5); border: 3px solid #fff; z-index: 20; position: relative; cursor: default; }
+        .show-all-text { color: white; font-size: 1.6em; margin-top: 20px; font-weight: bold; text-shadow: 0 2px 5px rgba(0,0,0,0.3); border-bottom: 3px solid white; padding-bottom: 5px; z-index: 20; font-family: 'Amiri', serif; }
+        
+        .flower-wrapper { position: absolute; z-index: 5; top: 5%; cursor: pointer; transition: transform 0.3s; }
+        .flower-wrapper:hover { transform: scale(1.1); }
+        .flower-wrapper.left { left: -110px; }
+        .flower-wrapper.right { right: -110px; }
+        .peeking-flower { width: 160px; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.3)); }
+        .flower-wrapper.left .peeking-flower { transform: rotate(-20deg); }
+        .flower-wrapper.right .peeking-flower { transform: rotate(20deg) scaleX(-1); }
+        
+        .flower-hint-container { position: absolute; display: flex; flex-direction: column; align-items: center; top: -70px; left: 50%; transform: translateX(-50%); width: 150px; text-align: center; z-index: 30; }
+        .click-hint-text { color: white; font-family: 'Dancing Script', cursive; font-size: 1.4em; margin-bottom: 0px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        .doodle-arrow { width: 50px; height: auto; filter: invert(1) drop-shadow(0 2px 3px rgba(0,0,0,0.5)); animation: pointDown 1s ease-in-out infinite alternate; }
+        .flower-wrapper.right .doodle-arrow { transform: scaleX(-1); animation: pointDownRight 1s ease-in-out infinite alternate; }
+        @keyframes pointDown { from { transform: translateY(0) rotate(10deg); } to { transform: translateY(10px) rotate(0deg); } }
+        @keyframes pointDownRight { from { transform: translateY(0) scaleX(-1) rotate(10deg); } to { transform: translateY(10px) scaleX(-1) rotate(0deg); } }
+
+        .show-msg-btn { background-color: transparent; border: 2px solid white; color: white; padding: 10px 30px; font-size: 1.5em; border-radius: 50px; margin-top: 30px; cursor: pointer; z-index: 30; font-family: 'Amiri', serif; font-weight: bold; transition: all 0.3s; position: relative; }
+        .show-msg-btn:hover { background-color: white; color: #720e1e; }
+
+        /* Scene 5 */
+        .final-image-container { position: relative; z-index: 10; animation: popIn 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; display: flex; flex-direction: column; align-items: center; }
+        .final-img { width: 95%; max-width: 600px; border-radius: 15px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); border: 2px solid #fff; margin-bottom: 20px; }
+        .bday-msg-top { color: white; font-family: 'Dancing Script', cursive; font-size: 2.5em; text-shadow: 0 4px 10px rgba(0,0,0,0.5); margin-bottom: 20px; text-align: center; }
+
+        /* Scene 6 */
+        .letter-card-container { position: relative; z-index: 10; width: 90%; max-width: 500px; background-color: #fffbf0; border-radius: 20px; padding: 25px; box-shadow: 0 20px 60px rgba(0,0,0,0.7); text-align: center; animation: popIn 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; border: 4px solid #fff; max-height: 85vh; overflow-y: auto; }
+        .card-corner-flower { position: absolute; width: 80px; z-index: 5; opacity: 0.8; }
+        .card-corner-flower.top-left { top: -10px; left: -10px; transform: rotate(-45deg); }
+        .card-corner-flower.bottom-right { bottom: -10px; right: -10px; transform: rotate(135deg); }
+        .card-title { font-family: 'Dancing Script', cursive; font-size: 2.2em; color: #d32f2f; margin-bottom: 15px; border-bottom: 2px dashed #ff9999; padding-bottom: 10px; }
+        .photos-row { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; }
+        .photo-frame { width: 110px; height: 110px; background: white; padding: 5px; border: 1px solid #ddd; box-shadow: 0 4px 8px rgba(0,0,0,0.1); transform: rotate(-3deg); }
+        .photo-frame:nth-child(2) { transform: rotate(3deg); }
+        .photo-frame img { width: 100%; height: 100%; object-fit: cover; }
+        .love-letter-text { font-family: 'Amiri', serif; font-size: 1.1em; line-height: 1.9; color: #444; white-space: pre-line; text-align: center; background-image: linear-gradient(#f0f0f0 1px, transparent 1px); background-size: 100% 1.9em; padding-bottom: 20px; }
+        .highlight-text { color: #d32f2f; font-weight: bold; }
+        .footer-heart { font-size: 1.5em; color: #d32f2f; margin-top: 10px; }
+        .back-btn-card { margin-top: 20px; background: #d32f2f; color: white; border: none; padding: 8px 25px; border-radius: 20px; cursor: pointer; font-family: 'Poppins', sans-serif; font-weight: bold; display: inline-flex; align-items: center; gap: 5px; }
+
+        @keyframes popIn { 0% { opacity: 0; transform: scale(0.5); } 100% { opacity: 1; transform: scale(1); } }
+        #explosion-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 100; overflow: hidden; }
+        .particle { position: absolute; top: 50%; left: 50%; width: 50px; height: 50px; opacity: 0; }
+        @keyframes flyOut { 0% { opacity: 1; transform: translate(-50%, -50%) scale(0.5) rotate(0deg); } 100% { opacity: 0; transform: translate(var(--dir-x), var(--dir-y)) scale(var(--scale-end)) rotate(var(--rot-end)); } }
+    </style>
+</head>
+<body>
+
+    <div id="scene1" class="scene visible">
+        <h1 id="header-text">عندك رسالة جديدة...</h1>
+        <div class="main-container">
+            <img src="1000039319.png" class="mailbox-bg" alt="Mailbox">
+            <div class="letter-container" id="myLetter">
+                <img src="1000039328.png" class="letter-img" alt="Letter">
+            </div>
+        </div>
+        <div class="click-btn" id="triggerBtn" onclick="transitionToScene2()">
+            <span class="btn-text">وركي تشوفي</span>
+            <div class="arrow-circle"><i class="fa-solid fa-arrow-right"></i></div>
+        </div>
+    </div>
+
+    <div id="scene2" class="scene hidden">
+        <h1 class="question-text">إلهام واش نتي هادي؟؟</h1>
+        <img src="1000039328.png" class="big-letter-img" alt="Big Letter">
+        <div class="yes-no-buttons">
+            <button class="choice-btn btn-yes" onclick="handleYes()">أه</button>
+            <button class="choice-btn btn-no" onclick="handleNo()">لا</button>
+        </div>
+    </div>
+
+    <div id="scene3" class="scene hidden">
+        <img src="1000039356.png" class="angry-cup-img" alt="Angry Cup">
+        <h2 class="angry-text">علاش دخلتي لهنا؟ <br> هاذي راه ماشي ليك</h2>
+        <div class="back-btn-container" onclick="goBackToScene2()">
+            <i class="fa-solid fa-arrow-right" style="transform: rotate(180deg);"></i>
+            <span style="font-family: 'Poppins', sans-serif; font-weight: bold;">رجوع</span>
+        </div>
+    </div>
+
+    <div id="scene4" class="scene hidden">
+        <div class="scene4-container">
+            <div class="center-piece-container">
+                
+                <div class="flower-wrapper left" onclick="transitionToScene5()">
+                    <div class="flower-hint-container">
+                        <span class="click-hint-text">وركي هنا</span>
+                        <img src="1000039394.png" class="doodle-arrow" alt="arrow">
+                    </div>
+                    <img src="1000039360.png" class="peeking-flower" alt="Flower">
+                </div>
+
+                <img src="1000039358.jpg" class="sneak-peek-img" alt="Sneak Peek">
+                
+                <div class="flower-wrapper right" onclick="transitionToScene5()">
+                    <div class="flower-hint-container">
+                        <span class="click-hint-text">وركي هنا</span>
+                        <img src="1000039394.png" class="doodle-arrow" alt="arrow">
+                    </div>
+                    <img src="1000039360.png" class="peeking-flower" alt="Flower">
+                </div>
+                
+                <button class="show-msg-btn" onclick="transitionToScene6()">بين رسالة</button>
+
+            </div>
+        </div>
+    </div>
+
+    <div id="scene5" class="scene hidden">
+        <div id="explosion-container"></div>
+        <div class="final-image-container">
+            <h1 class="bday-msg-top">عيد ميلاد سعيد إلهام كنبغيك ❤️</h1>
+            <img src="1000039396.png" class="final-img" alt="Bouquet">
+            <div class="back-btn-container" onclick="goBackToScene4()">
+                <i class="fa-solid fa-arrow-right" style="transform: rotate(180deg);"></i>
+                <span style="font-family: 'Poppins', sans-serif; font-weight: bold;">رجوع</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="scene6" class="scene hidden">
+        <div class="letter-card-container">
+            <img src="1000039360.png" class="card-corner-flower top-left">
+            <img src="1000039360.png" class="card-corner-flower bottom-right">
+
+            <h1 class="card-title">عيد ميلاد سعيد إلهام ❤️</h1>
+
+            <div class="photos-row">
+                <div class="photo-frame">
+                    <img src="10.jpg" alt="Bouquet">
+                </div>
+                <div class="photo-frame">
+                    <img src="11.jpg" alt="Ilhame">
+                </div>
+            </div>
+
+            <div class="love-letter-text">
+في بحال هاد النهار، تزادت أجمل حاجة وقعات ليا جوج مرات فحياتي:
+<span class="highlight-text">الأولى فاش كنا صغار فالإبتدائي، والتانية فاش تعارفنا تاني.</span>
+
+إلهام.. عيد ميلاد سعيد يا أحلى وأغلى إلهام فالدنيا. 🎂❤️
+
+بغيت نقول ليك بلي هاد النهار ماشي غير عيد ميلادك، هو عيد لقلبي حيت تزادت فيه أغلى إنسانة عندي.
+
+ماكرهتش كون جبت ليك الدنيا وما فيها، ولكن عرفي بلي راك نتي هي الدنيا ديالي وكل ما كنملك.
+
+الله يخليك ليا ضحكة فوسط همومي وفرحة فايامي.
+
+كل عام وأنتِ منورة حياتي، كل عام وأنتِ حدايا ومعايا. كنتمنى ربي يحقق ليك كاع الأحلام ديالك ويعطيك ما تمنيتي فخاطرك.
+
+كنواعدك نبقى ديما جنبك ونفرحك حيت كتستاهلي كل خير.
+
+كنبغيك بزاف، وعيد ميلاد سعيد يا أميرتي. 👑❤️
+            </div>
+
+            <div class="footer-heart">❤️ ❤️ ❤️</div>
+
+            <button class="back-btn-card" onclick="goBackToScene4()">
+                <i class="fa-solid fa-arrow-right" style="transform: rotate(180deg);"></i> رجوع
+            </button>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            setTimeout(() => { document.getElementById('myLetter').classList.add('emerge'); }, 500);
+            setTimeout(() => { document.getElementById('triggerBtn').classList.add('visible'); }, 3000);
+        };
+        function transitionToScene2() { switchScene('scene1', 'scene2'); }
+        function handleNo() { switchScene('scene2', 'scene3'); }
+        function goBackToScene2() { switchScene('scene3', 'scene2'); }
+        function handleYes() { switchScene('scene2', 'scene4'); }
+        
+        function transitionToScene5() {
+            switchScene('scene4', 'scene5');
+            setTimeout(() => { triggerExplosion(); }, 500);
+        }
+
+        function transitionToScene6() {
+            switchScene('scene4', 'scene6');
+        }
+
+        function goBackToScene4() {
+            document.getElementById('scene5').classList.remove('visible');
+            document.getElementById('scene5').classList.add('hidden');
+            document.getElementById('scene6').classList.remove('visible');
+            document.getElementById('scene6').classList.add('hidden');
+            setTimeout(() => {
+                document.getElementById('scene4').classList.remove('hidden');
+                document.getElementById('scene4').classList.add('visible');
+            }, 600);
+        }
+
+        function switchScene(fromId, toId) {
+            document.getElementById(fromId).classList.remove('visible');
+            document.getElementById(fromId).classList.add('hidden');
+            setTimeout(() => {
+                document.getElementById(toId).classList.remove('hidden');
+                document.getElementById(toId).classList.add('visible');
+            }, 600);
+        }
+        
+        function triggerExplosion() {
+            const container = document.getElementById('explosion-container');
+            const particlesCount = 300; 
+            const elements = ['<img src="1000039360.png" style="width:100%;height:100%;object-fit:contain;">', '❤️', '💖', '🎉', '🌸', '🌹', '✨', '😍', '🥰'];
+            for (let i = 0; i < particlesCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                const randomElement = elements[Math.floor(Math.random() * elements.length)];
+                particle.innerHTML = randomElement;
+                const angle = Math.random() * 360;
+                const distance = 400 + Math.random() * 800; 
+                const dirX = Math.cos(angle * Math.PI / 180) * distance + 'px';
+                const dirY = Math.sin(angle * Math.PI / 180) * distance + 'px';
+                const scaleEnd = 0.5 + Math.random() * 1.5; 
+                const rotEnd = -180 + Math.random() * 360 + 'deg';
+                const duration = 2 + Math.random() * 3 + 's'; 
+                particle.style.setProperty('--dir-x', dirX);
+                particle.style.setProperty('--dir-y', dirY);
+                particle.style.setProperty('--scale-end', scaleEnd);
+                particle.style.setProperty('--rot-end', rotEnd);
+                if (!randomElement.includes('<img')) {
+                     particle.style.fontSize = (40 + Math.random() * 50) + 'px';
+                     particle.style.display = 'flex'; particle.style.justifyContent = 'center'; particle.style.alignItems = 'center';
+                }
+                particle.style.animation = `flyOut ${duration} ease-out forwards`;
+                container.appendChild(particle);
+                setTimeout(() => { particle.remove(); }, parseFloat(duration) * 1000);
+            }
+        }
+    </script>
+</body>
+</html>
