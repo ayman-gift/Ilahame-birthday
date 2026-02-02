@@ -48,7 +48,7 @@
         .angry-cup-img { width: 140px; margin-bottom: 20px; animation: shake 0.5s infinite; }
         .back-btn-container { display: flex; align-items: center; gap: 10px; color: white; cursor: pointer; border: 2px solid white; padding: 8px 25px; border-radius: 30px; margin-top: 10px; }
 
-        /* ================== المشهد 4 (تحسين ظهور الورد) ================== */
+        /* ================== المشهد 4 (التعديل النهائي للورد) ================== */
         .scene4-container { 
             position: relative; width: 100%; height: 100%;
             display: flex; justify-content: center; align-items: center; 
@@ -85,50 +85,40 @@
         @media (min-width: 769px) {
             .center-piece-container { width: 320px; }
             .flower-wrapper { top: 15%; width: 150px; }
-            
-            /* اليسار */
             .flower-wrapper.left { left: -120px; }
             .flower-wrapper.left .peeking-flower { transform: rotate(-20deg); }
-            
-            /* اليمين */
             .flower-wrapper.right { right: -120px; }
             .flower-wrapper.right .peeking-flower { transform: scaleX(-1) rotate(20deg); } 
-            
             .flower-hint-container { top: -70px; width: 120px; left: 50%; transform: translateX(-50%); }
             .click-hint-text { font-size: 1.3em; margin-bottom: 5px; }
             .doodle-arrow { width: 45px; }
         }
 
-        /* ============ تصميم الهاتف (Mobile) - التعديل الكبير ============ */
+        /* ============ تصميم الهاتف (Mobile) - التعديل المطلوب ============ */
         @media (max-width: 768px) {
             .center-piece-container { 
                 width: 80%; max-width: 280px; 
-                margin-top: 100px; /* هبطنا كثر باش الورد يلقا فين يبان الفوق */
+                margin-top: 100px; 
             }
 
-            /* الورد الفوق */
+            /* الورد الفوق - زدنا طلعناه */
             .flower-wrapper { 
-                top: -85px; /* طلعناه بزااااف باش يبان خارج كامل */
-                width: 150px; /* كبرناه باش يعمر العين */
+                top: -115px; /* كان -85px، دابا طلع مزيان */
+                width: 150px; 
             }
 
-            /* اليسار */
             .flower-wrapper.left { 
-                left: -40px; /* خرجناه لليسار */
+                left: -40px; 
             }
-            .flower-wrapper.left .peeking-flower { transform: rotate(-30deg); } /* ميلناه كثر */
+            .flower-wrapper.left .peeking-flower { transform: rotate(-30deg); }
 
-            /* اليمين */
             .flower-wrapper.right { 
-                right: -40px; /* خرجناه لليمين */
+                right: -40px; 
             }
-            /* كنقلبو غير الوردة فقط */
-            .flower-wrapper.right .peeking-flower { transform: scaleX(-1) rotate(30deg); } /* ميلناه كثر */
+            .flower-wrapper.right .peeking-flower { transform: scaleX(-1) rotate(30deg); }
 
-            /* الأسهم */
             .flower-hint-container { 
-                top: -60px; /* فوق الورد */
-                width: 100px; left: 50%; transform: translateX(-50%);
+                top: -60px; width: 100px; left: 50%; transform: translateX(-50%);
             }
             .click-hint-text { font-size: 1.2em; margin-bottom: 2px; }
             .doodle-arrow { width: 40px; }
@@ -149,9 +139,13 @@
         }
         .final-img { width: 100%; border-radius: 8px; margin-bottom: 10px; }
         .bday-msg-top, .card-title { color: #d32f2f; font-family: 'Dancing Script', cursive; font-size: 1.8em; margin-bottom: 15px; }
-        .card-corner-flower { width: 50px; position: absolute; z-index: 5; opacity: 0.8; }
-        .card-corner-flower.top-left { top: -10px; left: -10px; transform: rotate(-45deg); }
-        .card-corner-flower.bottom-right { bottom: -10px; right: -10px; transform: rotate(135deg); }
+        
+        /* --- تعديل ورد القنات (المشهد 6) --- */
+        .card-corner-flower { width: 50px; position: absolute; z-index: 5; opacity: 0.9; }
+        /* لصقناهم فالقنت بالضبط */
+        .card-corner-flower.top-left { top: -2px; left: -2px; transform: rotate(-45deg); }
+        .card-corner-flower.bottom-right { bottom: -2px; right: -2px; transform: rotate(135deg); }
+        
         .photos-row { display: flex; justify-content: center; gap: 10px; margin-bottom: 15px; }
         .photo-frame { width: 80px; height: 80px; background: white; padding: 3px; border: 1px solid #ddd; transform: rotate(-3deg); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         .photo-frame:nth-child(2) { transform: rotate(3deg); }
