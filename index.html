@@ -48,7 +48,7 @@
         .angry-cup-img { width: 140px; margin-bottom: 20px; animation: shake 0.5s infinite; }
         .back-btn-container { display: flex; align-items: center; gap: 10px; color: white; cursor: pointer; border: 2px solid white; padding: 8px 25px; border-radius: 30px; margin-top: 10px; }
 
-        /* ================== المشهد 4 (الإصلاح الكامل) ================== */
+        /* ================== المشهد 4 (تحسين ظهور الورد) ================== */
         .scene4-container { 
             position: relative; width: 100%; height: 100%;
             display: flex; justify-content: center; align-items: center; 
@@ -69,7 +69,6 @@
         /* --- إعدادات الورد --- */
         .flower-wrapper { 
             position: absolute; z-index: 5; cursor: pointer; 
-            /* هنا كنخليو الكونتينر عادي ما مقلوبش */
         }
         
         .peeking-flower { width: 100%; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.4)); transition: transform 0.3s; }
@@ -93,7 +92,6 @@
             
             /* اليمين */
             .flower-wrapper.right { right: -120px; }
-            /* هنا كنقلبو غير التصويرة بوحدها باش الكتبة تبقى مقادة */
             .flower-wrapper.right .peeking-flower { transform: scaleX(-1) rotate(20deg); } 
             
             .flower-hint-container { top: -70px; width: 120px; left: 50%; transform: translateX(-50%); }
@@ -101,38 +99,39 @@
             .doodle-arrow { width: 45px; }
         }
 
-        /* ============ تصميم الهاتف (Mobile) ============ */
+        /* ============ تصميم الهاتف (Mobile) - التعديل الكبير ============ */
         @media (max-width: 768px) {
             .center-piece-container { 
-                width: 85%; max-width: 280px; 
-                margin-top: 80px; /* هبطنا باش الورد يبان الفوق */
+                width: 80%; max-width: 280px; 
+                margin-top: 100px; /* هبطنا كثر باش الورد يلقا فين يبان الفوق */
             }
 
             /* الورد الفوق */
             .flower-wrapper { 
-                top: -65px; /* طلعناهم مزيان باش يبانو كاملين */
-                width: 120px; /* كبرناهم باش يبانو واضحين */
+                top: -85px; /* طلعناه بزااااف باش يبان خارج كامل */
+                width: 150px; /* كبرناه باش يعمر العين */
             }
 
             /* اليسار */
             .flower-wrapper.left { 
-                left: -15px; 
+                left: -40px; /* خرجناه لليسار */
             }
-            .flower-wrapper.left .peeking-flower { transform: rotate(-25deg); }
+            .flower-wrapper.left .peeking-flower { transform: rotate(-30deg); } /* ميلناه كثر */
 
             /* اليمين */
             .flower-wrapper.right { 
-                right: -15px; 
+                right: -40px; /* خرجناه لليمين */
             }
-            /* كنقلبو غير الوردة، الكتبة كتبقى مقادة */
-            .flower-wrapper.right .peeking-flower { transform: scaleX(-1) rotate(25deg); }
+            /* كنقلبو غير الوردة فقط */
+            .flower-wrapper.right .peeking-flower { transform: scaleX(-1) rotate(30deg); } /* ميلناه كثر */
 
             /* الأسهم */
             .flower-hint-container { 
-                top: -55px; width: 100px; left: 50%; transform: translateX(-50%);
+                top: -60px; /* فوق الورد */
+                width: 100px; left: 50%; transform: translateX(-50%);
             }
-            .click-hint-text { font-size: 1.1em; margin-bottom: 2px; }
-            .doodle-arrow { width: 35px; }
+            .click-hint-text { font-size: 1.2em; margin-bottom: 2px; }
+            .doodle-arrow { width: 40px; }
         }
 
         .show-msg-btn { background: transparent; border: 2px solid white; color: white; padding: 10px 35px; font-size: 1.4em; border-radius: 50px; margin-top: 40px; cursor: pointer; z-index: 30; font-family: 'Amiri', serif; font-weight: bold; transition: 0.3s; }
